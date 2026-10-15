@@ -69,9 +69,9 @@ python -m pip install -r tests/requirements.txt
 python scripts/localization.py
 ```
 
-These checks run without ONI. [Testing](docs/testing.md) describes game-dependent checks, the manual regression scenario and research into deterministic automation with screenshot evidence.
+These checks run without ONI. [Testing](docs/testing.md) describes game checks and manual regression. A separate [development test agent and runner](tests/runtime/README.md) has completed its 20-step HUD scenario in ONI using both the local mod-difference gate and a matching strict baseline, with PNG evidence. These runs used a 29-mod collection including the agent; they do not certify every mod interaction. The harness dispatches Unity UI events and commits numeric fields through their component API; hardware keyboard input and gameplay remain outside its coverage. See [validation](VALIDATION.md) for exact runs and limitations.
 
-For routine work, use `make check`, `make build`, `make package`, `make install` or `make translations`. Set `ONI_GAME_PATH` for game-dependent tasks. Make is optional: `./tasks.ps1 -Task check` (or another task name) runs the same commands on Windows without it. The localization check requires Python 3.10+ and the dependency shown above. Builds also check the installed game's patch targets and reflected fields.
+For routine work, use `make check`, `make build`, `make package`, `make install` or `make translations`. `make test-agent` builds the separate development mod; `make test-runner` checks its external runner without the game. Set `ONI_GAME_PATH` for game-dependent tasks. Make is optional: `./tasks.ps1 -Task check` (or another task name) runs the same commands on Windows without it. The localization check requires Python 3.10+ and the dependency shown above. Builds also check the installed game's patch targets and reflected fields.
 
 ## Configuration and translations
 

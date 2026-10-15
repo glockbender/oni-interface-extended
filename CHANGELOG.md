@@ -9,6 +9,7 @@
 - Refresh status text when values change instead of formatting it every frame.
 - Display a settings-save error in the window if writing the config fails.
 - Add assembly version metadata, build instructions, repository checks and contribution templates.
+- Add a separate development test agent and Python runner with HUD assertions, screenshot reports and headless protocol tests. The 20-step scenario passed in ONI with both local and strict baseline profiles; a deliberate wrong-width assertion failed as expected. See the validation record for the tested collection and remaining coverage.
 
 ## 1.2.0 (local build, 2026-10-16)
 

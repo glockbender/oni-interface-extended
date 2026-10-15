@@ -10,4 +10,6 @@ Run the checks in [README](README.md#build). Changes to Harmony targets or prefa
 
 For UI changes, reuse ONI's visual controls and provide screenshots from the game. Do not substitute mockups for runtime evidence. For text changes, update the [translation template and catalogs](docs/translating.md).
 
+The [development game test](tests/runtime/README.md) is a separate mod, excluded from release packages. `make check` includes its external runner tests; `make test-agent` compiles the game-side agent without installing it. Clearly distinguish a prepared request, a headless protocol test and an actual game pass in reports. Record the profile, save/DLL hashes, active collection, step results and screenshots. A strict baseline must match the enabled collection, including the agent. A run with other mods does not certify their individual interactions; Unity event dispatch does not verify hardware keyboard input or gameplay. Negative controls must fail at the intended assertion or blocked click, not during loading.
+
 Do not commit game DLLs, extracted assets, saves, local tool downloads or build output. The original mod ID `prvz.CenteredHud` and installed folder `CenteredHud` must remain compatible unless a migration is provided.

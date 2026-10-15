@@ -33,8 +33,37 @@ Windows, ONI U59-744825-SCRPAN / Unity 6000.3.5f2, 5120 × 1440, UI scale 110%. 
 
 - Injected Ctrl+Shift+F8/F9 did not trigger actions even with shortcuts enabled. The cause is unresolved; no physical-keyboard pass is claimed. Shortcuts were disabled again. Mouse controls passed.
 - The language restart produced a native crash after input/physics shutdown. Its native stack contains UnityPlayer and Steam's `gameoverlayrenderer64`; there is no managed mod stack establishing a cause. The new Russian process started successfully. No mod-disabled comparison was performed, so attribution remains open.
-- Settings-save error UI, malformed/unwritable config in game, initially-playing pause restoration, other resolutions/UI scales and long translations remain untested.
-- The deterministic game test runner is researched in [testing](docs/testing.md) and is not implemented. This was a manual Computer Use run with screenshots and config evidence.
+- Settings-save error UI, malformed/unwritable config in game, other resolutions/UI scales and long translations remain untested. Initially-playing pause restoration passed in the agent scenario below.
+- The manual run above used Computer Use with screenshots and config evidence. Agent-driven checks are recorded separately below.
+
+## Development test harness: game runs
+
+The separate test mod and standard-library Python runner are under [tests/runtime](tests/runtime/README.md). The agent compiles with warnings as errors against U59-744825. `make check` passes geometry/options/localization checks and 29 Python protocol/evidence tests. Those Python tests use synthetic saves, bridge responses and PNGs; actual game runs are listed below.
+
+After the user handed over control, the agent was installed as a separate development mod. The user's 28 enabled mods were retained; adding the agent made 29. Runs used Windows, U59-744825-SCRPAN / Unity 6000.3.5f2, Russian, 5120 × 1440, UI scale 110% (canvas scale 1.22100008), with all five installed DLC. This is coverage of the recorded scenario with that collection, not individual compatibility certification or an isolated run.
+
+| Run directory under `artifacts/runs` (UTC) | Profile / control | Result |
+| --- | --- | --- |
+| `20261015T233020Z-48008de9` | Local, explicit native mod-difference gate | Passed: 20 steps, 21 PNGs including the dialog |
+| `20261015T233250Z-083e6ed5` | Default, matching fixture | Passed: 20 steps, 20 PNGs, no mod-difference dialog |
+| `20261015T233421Z-4cc97db4` | Wrong-width negative | Expected exit 1 at `preset-2560`: actual anchor 0.25 vs expected 0.2421875 |
+| `20261015T234130Z-b7a4e162` | Final agent, default profile | Passed: 20 steps, 20 validated PNGs, no mod-difference dialog |
+| `20261015T234212Z-e59aaa8e` | Final agent, blocked-control negative | Expected exit 1 at `preset-2560`: first raycast hit was `InterfaceExtendedTestBlocker`, not `Preset2560`; `failure-06.png` captured before cleanup |
+| `20261015T234304Z-ffafc8b1` | Final agent, wrong-width negative | Expected exit 1 at `preset-2560`, same anchor mismatch as above; failure screenshot preserved |
+
+The first three runs used agent SHA-256 `FFAF73B1F3DA7A3558209B604BC3E714410C9370F4F719A1FD9A5192BCD55F3B`. The final three used `0DCFBBC615E482DDD339B14AC2ADA82C5835ACEE9E07AC0CAC5B7EF298A13FC6`, after adding rendered-frame readiness for the negative control's blocking canvas. Production DLL SHA-256 remained `092C0BA4AC1193F907165DD6A791AF32613643DD40E2D342B75436D4AA220F6C`.
+
+The scenario checks native Options entry/closing, explicit loading of a fresh working copy, full/2560/3360/custom 2720 widths, minus/plus, config persistence, guides, shortcut setting, repeated opening, and paused/playing pause ownership. All nine HUD roots are measured against independent expected anchors, screen corners and preserved offsets. Width changes restored full-width positions without cumulative displacement. Numeric text, including TMP's trailing zero-width sentinel, stayed inside its viewport. No error/exception/assert log was captured in the passing scenarios.
+
+The original immutable baseline has the hash recorded above. For the default profile, native Save As on a disposable copy created a separate matching fixture with the agent enabled; SHA-256 `479EF2EEFFDC55AFACB9E12A8D7424F16F61BBF604609AB19EEFC5117C8BCB6E`. The original fixture was preserved. Each run copied and verified its source before loading only that working copy. Successful and handled-failure runs restored the original config bytes, SHA-256 `D6AABDA2AA85190A7258AAC8FC1539E1C0FCC492C724C9A553CF176B5786F257`.
+
+Local reports contain the HTML screenshot gallery, JSON measurements, DLL/save hashes, active/saved mod lists, logs, config backup and recovery record. The runner independently checks complete PNG chunks, CRC, decompression, dimensions and hashes before declaring a pass. Screenshots and saves remain local; they are excluded from source and release packages.
+
+Pointer tests use Unity EventSystem raycasts and pointer events; numeric commit uses the native input component. They do not prove hardware keyboard/hotkey handling, Escape behavior, every gameplay panel or long-session stability. The agent does not synchronize mods, generate a world, use Continue, or load a personal colony.
+
+An intermediate agent run caught a title-bar selector mismatch (`TitleBar(Clone)`); another caught TMP's trailing zero-width sentinel in the display-text assertion. Both were corrected before the complete passes. The first blocked-control attempt failed on the later Done button because the new canvas had not registered for the initial preset click; the final run above verifies the intended first interaction instead. An ONI boot interrupted while replacing the agent caused a native safe-mode notice on the next launch; exiting from the main menu and launching normally restored the enabled collection before the final runs. No automatic restart or safe-mode dismissal is part of the harness.
+
+After the final negative control, ONI was closed and only the test agent was disabled. The 28 enabled pre-test mods match the original collection; all other mod entries are structurally unchanged. Production DLL, exact config bytes and both source fixture hashes were verified unchanged. Local cleanup evidence is in `artifacts/runtime-agent-setup/cleanup.json`.
 
 ## Runtime environment for 1.0.0–1.2.0
 

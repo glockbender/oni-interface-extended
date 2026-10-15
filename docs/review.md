@@ -4,7 +4,7 @@ Reviewed 2026-10-16 for the initial public repository and the unreleased 1.3.0 s
 
 ## Scope and findings
 
-Reviewed every tracked C# source file, mod metadata/default config, PowerShell/Python/Make build and check scripts, translation catalogs, workflow, README, contribution guidance and validation record. Also inspected relevant installed-game types without running game code.
+Reviewed every tracked C# source file, mod metadata/default config, PowerShell/Python/Make build and check scripts, translation catalogs, workflow, README, contribution guidance and validation record. Inspected relevant installed-game types; runtime verification is recorded separately in [validation](../VALIDATION.md).
 
 | Finding | Resolution |
 | --- | --- |
@@ -41,6 +41,6 @@ Used the requested [article](https://www.opensourceprojects.dev/post/anti-slop) 
 
 - Harmony patches and prefab paths depend on ONI internals; a game update can change them.
 - Mods that alter the same anchors or modal hierarchy can interact with this mod.
-- Automated geometry/options/catalog checks do not validate Unity rendering or mouse hit testing.
-- Other resolutions/scales, save-error UI, initially-playing pause restoration and physical shortcuts still need runtime checks. A native shutdown crash occurred during the language restart; its cause is unconfirmed. See [validation](../VALIDATION.md).
-- The deterministic game-side test runner is researched but not implemented. No public binary release is claimed ready on the strength of static checks alone.
+- Headless geometry/options/catalog checks do not validate Unity rendering or mouse hit testing. The separate game agent now has complete local and strict runs with measured layout, raycast checks and PNG evidence, including initially-playing pause restoration. Its wrong-width negative control failed at the intended assertion.
+- Other resolutions/scales, save-error UI and physical shortcuts still need runtime checks. The agent uses Unity events/component commits, not hardware keyboard input, and does not test gameplay. A native shutdown crash occurred during the language restart; its cause is unconfirmed. See [validation](../VALIDATION.md).
+- Agent runs used 29 active mods including the development agent. They cover the recorded scenarios, not every interaction within that collection. The final agent build passed the strict scenario; the blocked-control negative check failed at the intended intercepted click. Exact builds and runs are in the validation record.

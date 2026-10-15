@@ -9,9 +9,10 @@ Run `make check`, or `./tasks.ps1 check` without Make. Requires PowerShell 7, Py
 | `tests/test-geometry.ps1` | Presets, invalid inputs, scaled minimum, step regression, symmetry, center, stretched anchors and restoration mapping | Actual Unity layout, click targets or rendering |
 | `tests/test-options.ps1` | First-install defaults, width bounds, missing shortcut keys and preservation of custom settings | JSON file writes, disk errors or game input |
 | `scripts/localization.py` | English/template/catalog consistency, duplicates, stale text, fuzzy/plural entries and placeholders | Native startup order, font coverage or text clipping |
+| `tests/runtime/test_runner.py` | Request correlation, timeouts, baseline preservation, safe HTML paths, PNG validation and failed-evidence handling | Actual Unity events, rendering or any colony scenario |
 | `tests/test-game-contract.ps1 -GamePath <path>` | Named Harmony targets and reflected fields in installed DLL metadata; mod version and framework references | Harmony runtime injection or prefab hierarchy |
 
-`make build` compiles against your installed ONI with warnings as errors and then runs the game contract check. `make package` does the same and creates `artifacts/InterfaceExtended-<version>.zip`. `make install` also copies to your local mods directory and requires ONI to be closed. `make translations` regenerates the translation template and validates catalogs. Set `ONI_GAME_PATH` for the game-dependent commands. All tasks are also available as `./tasks.ps1 -Task <name>`; `-GamePath` and `-Python` accept explicit paths.
+`make build` compiles against your installed ONI with warnings as errors and then runs the game contract check. `make package` does the same and creates `artifacts/InterfaceExtended-<version>.zip`. `make install` also copies to your local mods directory and requires ONI to be closed. `make translations` regenerates the translation template and validates catalogs. `make test-agent` builds the separate development agent without installing it; `make test-runner` runs its headless checks alone. Set `ONI_GAME_PATH` for the game-dependent commands. All tasks are also available as `./tasks.ps1 -Task <name>`; `-GamePath` and `-Python` accept explicit paths.
 
 GitHub Actions runs the game-independent checks. It does not have ONI installed, build the mod, or run a colony. No game assemblies are published for CI. See [VALIDATION.md](../VALIDATION.md) for completed runtime checks.
 
@@ -35,7 +36,7 @@ The default scenario loads a matching baseline and reaches the colony without a 
 
 For the user's local mod collection, allow an optional gate after selecting the baseline save: wait for either the loaded HUD or the recognized mod-difference dialog. If the HUD appears, continue immediately. If the dialog appears, capture it and record the baseline's mod list, current active mod IDs/versions and their difference. Use the native action that continues with the current collection, then wait for the loaded HUD. Do not synchronize, enable or disable mods, and do not overwrite the immutable baseline to dismiss the warning on future runs.
 
-Implement this as a profile option (for example `allowModDifferenceDialog`), disabled for the default isolated scenario. The local profile permits the known dialog to be absent; it does not require it. Unknown dialogs, missing continuation actions, unexpected mod differences and load failures stop the run with screenshot evidence. Confirm the actual screen/control identifiers in ONI before implementing the selector; the dialog has not been exercised in this run. Keep one bounded load deadline, with the encountered branch recorded in results.
+The agent implements this as `--profile local --allow-mod-difference-dialog`, disabled for the default strict scenario. The local profile permits the known dialog to be absent; it does not require it. Both the dialog branch and a strict load without a dialog have passed in ONI. Unknown dialogs, unexpected actions and mod load failures stop the run with screenshot evidence when rendering works. Loading uses one bounded deadline, with the encountered branch recorded in results. The test agent itself changes the saved mod footprint: an older baseline needs the local gate or a separately prepared matching fixture. A matching fixture was prepared once using native Save As on a disposable copy with the intended collection enabled; the original baseline was preserved. See the [profile setup](../tests/runtime/README.md#profiles-and-saved-mod-lists).
 
 A run with the user's full collection is a separate profile from the isolated regression run. Its manifest must record the actual active collection; it cannot be reported as an Interface-Extended-only pass. The user re-enabled their collection after the recorded isolated check. Future automation must respect that state unless explicitly asked to change it.
 
@@ -43,7 +44,7 @@ Also test a malformed config and an unwritable config location in a disposable i
 
 ## Automation research (2026-10-16)
 
-**Recommendation:** use a separate development-only ONI test mod, driven by a small external runner. Keep game-independent checks in ordinary CI. This is a proposed implementation, not an existing automated game suite.
+**Implementation status:** the separate development-only ONI test mod and external runner have completed the 20-step HUD scenario in local and strict profiles, with screenshots and measured assertions. The runner also has headless protocol/evidence tests. The recorded collection contained 29 mods including the agent; these runs do not certify all mod combinations or gameplay. [Setup, commands, assertions and recovery](../tests/runtime/README.md) document the implementation; [validation](../VALIDATION.md) identifies the exact runs and outstanding checks.
 
 | Approach | Suitability for this mod |
 | --- | --- |
@@ -51,43 +52,42 @@ Also test a malformed config and an unwritable config location in a disposable i
 | Unity Test Framework | Supports Edit/Play Mode and player tests built from a Unity project. We have the retail game and a mod, not Klei's Unity project. It is not a drop-in runner for an existing ONI installation. [Documentation](https://docs.unity3d.com/Packages/com.unity.test-framework@1.4/manual/index.html) |
 | AltTester | Provides object selectors, waits, input and PNG screenshots. Its documented setup instruments a Unity build with its SDK; without source, it asks for an instrumented build. Injecting it through ONI's mod loader would need a separate compatibility/dependency investigation. It has not been tried here. [Setup](https://alttester.com/docs/sdk/latest/pages/get-started.html), [API overview](https://www.alttester.com/docs/sdk/latest/home.html) |
 | OS input and image matching | Can exercise real input without a game-side agent, but coordinates, focus, overlays, timing and translated captions make it more fragile. Useful as a small additional smoke check. |
-| ONI test mod | Uses the existing mod loader, Unity hierarchy, UI events and game state. Needs implementation, but avoids rebuilding ONI or adding another injection framework. Best fit for the small set of controls under test. |
+| ONI test mod | Uses the existing mod loader, Unity hierarchy, UI events and game state. The separate agent has completed local and strict HUD regression scenarios. Avoids rebuilding ONI or adding another injection framework. |
 
-Inspection of the installed U59-744825 assemblies confirms these available entry points: `NewGameFlow.BeginFlow()`, `CustomGameSettings.SetQualitySetting(...)`, `CustomGameSettingConfigs.WorldgenSeed`, `GetSettingsCoordinate()`, `SpeedControlScreen.IsPaused`, and the Unity UI event system. The native new-game action uses `BeginFlow`; seed selection goes through game settings. This supports the approach, but does not prove an entire new-game scenario works unattended. World-generation progress, DLC flow and starting-duplicant selection still need an actual prototype.
+Routine HUD tests load a disposable copy of a dedicated baseline through the native load path. Automated world generation, DLC selection and starting-duplicant selection are outside this implementation; creating a new world is a separate check when relevant.
 
 The settings controls now have locale-independent object names such as `InterfaceExtendedSettings/Panel/Layout/Preset2560`, `FullWidth`, `Width`, `Guides`, `DecreaseWidth` and `Panel/Done`. The native options entry already has the unique user-data ID `prvz.CenteredHud.Options`. A driver can find these without matching visible translated text.
 
-### Proposed first implementation
+### Implemented prototype and remaining coverage
 
-- Put the test agent in a separate local mod, excluded from normal release packages. An external PowerShell/Python runner supplies a fixed scenario through a local file queue with request IDs and timeouts. No network server or general-purpose code evaluation is needed.
-- Perform Unity operations on the main thread. Wait for specific screens, active/interactable controls and stable measured layout over consecutive frames. Use bounded deadlines, not fixed sleeps. Wait for a rendered frame before capture.
-- Create the dedicated baseline once through New Game with an explicit world preset/seed/settings. For routine runs, load a disposable copy of the baseline, wait for the HUD and pause. Avoid Continue and personal saves. Keep world-generation testing as a separate, infrequent scenario. Record the baseline hash and environment: a fixed save improves repeatability, but does not guarantee identical rendering or simulation across versions/mod lists.
-- For interaction tests, raycast at the visible target center and dispatch pointer/input events through Unity UI. Fail if another object blocks the target. Invoking `onClick` directly or setting config fields can help setup, but does not count as proof a player can click a control. Add an OS-input smoke scenario to cover game focus and hardware input separately.
-- Assert actual container anchors/world-space corners, canvas scale, effective width, active mod window count, config contents and pause state. Compare against independently specified expectations: at a 5120 px viewport, 2560 and 3360 widths have 1280 and 880 px margins before panel-specific offsets. Do not only compare the setting to the same value just assigned by the runner.
-- Run both initially-playing and initially-paused cases so a balanced modal pause count is observable after closing all menus. Test a lazy selection panel after it first appears. Deliberately change one expected width and verify that the suite fails; temporarily block a control and verify that the interaction check fails.
+- The separate local test mod is excluded from release packaging. A standard-library Python runner supplies one fixed scenario through atomic JSON requests with IDs and timeouts. There is no network listener or general code-evaluation endpoint.
+- Unity operations run on the main thread with screen/readiness checks, bounded waits and stable measured layout over consecutive rendered frames. The scenario loads a disposable baseline copy explicitly, preserving the original hash. It refuses to replace a loaded colony and never edits the enabled mod list.
+- Controls under test receive pointer events after a center raycast proves that the expected control is the first input receiver. Setup navigation/load actions use native methods. Numeric editing commits through the input component; this is not a physical keyboard test.
+- Independent equations check the nine named HUD roots' anchors, screen corners and preserved offsets. The scenario checks preset/custom/step widths, guides, config persistence, parent modal restoration and paused/playing pause ownership. The wrong-width negative control failed at its intended assertion; after the canvas-readiness adjustment, the blocked-control check failed at the intended intercepted click. The final agent build also passed the complete strict scenario.
+- Construction/tools/overlay interactions, lazy selection panels, tooltips, world selection, hardware keyboard input, language/restart checks and alternate resolutions remain outside this prototype. A separate manual regression scenario above covers that broader scope.
 
 ### Screenshot evidence
 
 Unity exposes PNG capture through [`ScreenCapture.CaptureScreenshot`](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/ScreenCapture.CaptureScreenshot.html). The installed game includes `UnityEngine.ScreenCaptureModule.dll`. Capture after [`WaitForEndOfFrame`](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/WaitForEndOfFrame.html), which follows camera and GUI rendering. Wait for a complete, decodable PNG before marking a capture successful. Use a rendered desktop session for UI tests; do not assume `-batchmode -nographics` can validate HUD rendering.
 
-Each run should produce:
+Each real invocation writes a new local run directory. The [runner reference](../tests/runtime/README.md#assertions-and-screenshots) lists exact output files and evidence fields. Its core output is:
 
 ```text
 artifacts/runs/<run-id>/
   manifest.json       # Build/DLL hash, save hash, environment, scenario version
   results.json        # Steps, actions, assertions, timestamps, pass/fail
-  01-full-width.png
-  02-2560.png
-  03-3360.png
-  04-settings.png
-  05-after-close.png
+  full-width.png
+  hud-full-width.png
+  preset-2560.png
+  hud-2560.png
+  numeric-width.png
   failure-<step>.png  # Capture on failure, when rendering still works
   layout-<step>.json  # Measured rectangles, raycast target, pause state
   player-log.txt      # Relevant log interval
   index.html         # Local gallery linked to step results and measurements
 ```
 
-This is a proposed output contract, not a fabricated sample run. Store image dimensions and SHA-256 hashes with step records. Include screenshots of the target after each mutation and after close/restore, not just a final image. Screenshots and numerical assertions serve different checks: one catches clipping or unexpected visuals, the other detects hidden state errors.
+The tree shows the artifact layout; actual run results are recorded separately in [validation](../VALIDATION.md). The agent decodes each capture; the runner validates PNG structure/checksums/compressed data and stores dimensions and SHA-256 hashes in `evidence.json`. Settings, unobstructed HUD, optional mod-difference, close/restore and failure captures support human visual review alongside numerical assertions. No automatic visual baseline comparison is implemented.
 
 The baseline should be a small, unbuilt cycle-1 colony, paused with a fixed camera and no modal or selected object. Keep an immutable original plus a working copy; test actions and autosaves may change the latter. Reset mod config separately because ONI saves do not contain this mod's settings. Use a separate baseline per game/DLC profile and revalidate it after an ONI update rather than silently replacing it. Save files remain local and are ignored by Git.
 

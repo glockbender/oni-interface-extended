@@ -1,7 +1,8 @@
 #Requires -Version 7.0
 param(
     [Parameter(Mandatory)][string]$GamePath,
-    [string]$ModPath = (Join-Path $PSScriptRoot '../artifacts/CenteredHud/CenteredHud.dll')
+    [string]$ModPath = (Join-Path $PSScriptRoot '../artifacts/CenteredHud/CenteredHud.dll'),
+    [string]$TestAgentPath
 )
 $ErrorActionPreference = 'Stop'
 
@@ -56,5 +57,26 @@ Read-Metadata $ModPath {
     $info = Get-Content -Raw (Join-Path $PSScriptRoot '../mod/mod_info.yaml')
     $expected = [regex]::Match($info, 'version: "([\d.]+)"').Groups[1].Value
     if ($version.ToString(3) -ne $expected) { throw "DLL version $version differs from metadata $expected" }
+}
+if ($TestAgentPath) {
+    Read-Metadata (Join-Path $GamePath 'OxygenNotIncluded_Data/Managed/Assembly-CSharp.dll') {
+        param($reader)
+        Require-Members $reader 'MainMenu' @('Options') @()
+        Require-Members $reader 'LoadScreen' @('DoLoad') @()
+        Require-Members $reader 'PauseScreen' @('OnOptions', 'OnResume') @()
+        Require-Members $reader 'SpeedControlScreen' @('Pause', 'Unpause') @('pauseCount')
+        Require-Members $reader 'ConfirmDialogScreen' @() @('titleText', 'popupMessage', 'confirmButton', 'cancelButton',
+            'configurableButton', 'confirmAction', 'cancelAction', 'configurableAction', 'onDeactivateCB')
+        Require-Members $reader 'Manager' @('MatchFootprint') @('events')
+        Require-Members $reader 'KleiVersion' @() @('ChangeList')
+    }
+    Read-Metadata $TestAgentPath {
+        param($reader)
+        foreach ($handle in $reader.AssemblyReferences) {
+            $name = $reader.GetString($reader.GetAssemblyReference($handle).Name)
+            if ($name -eq 'System.Private.CoreLib') { throw 'Test agent references the host runtime instead of ONI assemblies' }
+        }
+    }
+    Write-Output 'Test-agent game contract checks passed.'
 }
 Write-Output 'Game contract checks passed: patch targets, reflected fields, framework reference and assembly version.'

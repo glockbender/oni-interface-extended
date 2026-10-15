@@ -1,0 +1,3 @@
+title: "Interface Extended Test Agent (development only)"
+description: "Runs local Interface Extended regression requests. Not required for normal play."
+staticID: "prvz.InterfaceExtended.TestAgent"
