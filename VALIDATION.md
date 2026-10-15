@@ -14,7 +14,7 @@ Date: 2026-10-16 (Asia/Nicosia).
 
 ### 1.3.0 runtime check
 
-Windows, ONI U59-744825-SCRPAN / Unity 6000.3.5f2, 5120 × 1440, UI scale 110%. Only Interface Extended was enabled; all other mods were disabled for this run and left disabled at the user's request. All five installed DLC were available: Spaced Out!, Frosty Planet, Bionic Booster, Prehistoric Planet and Aquatic Planet. This does not establish base-game-only compatibility.
+Windows, ONI U59-744825-SCRPAN / Unity 6000.3.5f2, 5120 × 1440, UI scale 110%. Only Interface Extended was enabled; all other mods were disabled during this run. The user re-enabled their collection afterward; this validation does not cover that combination. All five installed DLC were available: Spaced Out!, Frosty Planet, Bionic Booster, Prehistoric Planet and Aquatic Planet. This does not establish base-game-only compatibility.
 
 - Created a separate Survival / Spaced Out / Terrania colony, `InterfaceExtended-TestBaseline`, with cloud saving off. Seed `520304708`; complete settings coordinate `SNDST-C-520304708-0-V9-CKZRH4Y1`. Native story/mixing settings are encoded in that coordinate.
 - Saved at cycle 1 with three starting duplicants, no construction orders, no selected object, no modal, initial camera unchanged and simulation paused. Preserved an immutable local copy outside autosave rotation, then explicitly loaded the working save through Load Game after a restart. No repeat world generation was needed.

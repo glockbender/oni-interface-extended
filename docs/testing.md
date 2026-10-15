@@ -29,6 +29,16 @@ Create a dedicated test colony once and save it as `InterfaceExtended-TestBaseli
 8. Click construction, tools, management/overlays and a selection details panel at their displayed positions. Check tooltip placement and world selection on both sides of the central HUD area.
 9. Restart and verify persistence. Repeat in English and Russian. Exercise a changed resolution/UI scale and inspect Player.log for new exceptions.
 
+### Optional mod-difference gate
+
+The default scenario loads a matching baseline and reaches the colony without a mod-difference dialog. Do not add a mandatory dialog wait to that path.
+
+For the user's local mod collection, allow an optional gate after selecting the baseline save: wait for either the loaded HUD or the recognized mod-difference dialog. If the HUD appears, continue immediately. If the dialog appears, capture it and record the baseline's mod list, current active mod IDs/versions and their difference. Use the native action that continues with the current collection, then wait for the loaded HUD. Do not synchronize, enable or disable mods, and do not overwrite the immutable baseline to dismiss the warning on future runs.
+
+Implement this as a profile option (for example `allowModDifferenceDialog`), disabled for the default isolated scenario. The local profile permits the known dialog to be absent; it does not require it. Unknown dialogs, missing continuation actions, unexpected mod differences and load failures stop the run with screenshot evidence. Confirm the actual screen/control identifiers in ONI before implementing the selector; the dialog has not been exercised in this run. Keep one bounded load deadline, with the encountered branch recorded in results.
+
+A run with the user's full collection is a separate profile from the isolated regression run. Its manifest must record the actual active collection; it cannot be reported as an Interface-Extended-only pass. The user re-enabled their collection after the recorded isolated check. Future automation must respect that state unless explicitly asked to change it.
+
 Also test a malformed config and an unwritable config location in a disposable installation. Reading should fall back to defaults; saving should show an error in settings. These paths have not yet been exercised in ONI for 1.3.0.
 
 ## Automation research (2026-10-16)
