@@ -1,0 +1,10 @@
+name: Feature request
+description: Suggest an interface improvement.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the game situation and the behavior you would like.
+    validations:
+      required: true

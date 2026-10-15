@@ -1,0 +1,21 @@
+name: Bug report
+description: Report a reproducible problem with Interface Extended.
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: ONI build, mod version, DLC, OS, resolution, UI scale and other UI mods.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps, expected result and actual result
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots and log excerpt
+      description: Attach relevant Player.log output. Remove personal paths first.

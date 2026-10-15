@@ -1,0 +1,67 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Interface Extended\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgctxt "CenteredHud.Localization.STRINGS.TITLE"
+msgid "Interface Extended"
+msgstr "Расширенный интерфейс"
+
+msgctxt "CenteredHud.Localization.STRINGS.LAYOUT"
+msgid "Panel layout"
+msgstr "Расположение панелей"
+
+msgctxt "CenteredHud.Localization.STRINGS.DESCRIPTION"
+msgid "Bring HUD panels closer while keeping the full world view."
+msgstr "Приблизьте панели интерфейса, сохранив полный обзор мира."
+
+msgctxt "CenteredHud.Localization.STRINGS.CENTERED"
+msgid "Centered HUD"
+msgstr "Центральная область"
+
+msgctxt "CenteredHud.Localization.STRINGS.FULLSCREEN"
+msgid "Full width"
+msgstr "Весь экран"
+
+msgctxt "CenteredHud.Localization.STRINGS.PIXELS"
+msgid "{0} px"
+msgstr "{0} пикс."
+
+msgctxt "CenteredHud.Localization.STRINGS.LIVE_STATUS"
+msgid "{0} · {1:0} px  |  Screen: {2} × {3}"
+msgstr "{0} · {1:0} пикс.  |  Экран: {2} × {3}"
+
+msgctxt "CenteredHud.Localization.STRINGS.MENU_STATUS"
+msgid "{0}\nLoad a colony to preview changes."
+msgstr "{0}\nЗагрузите колонию, чтобы увидеть изменения."
+
+msgctxt "CenteredHud.Localization.STRINGS.WIDTH"
+msgid "Width in pixels:"
+msgstr "Ширина, пиксели:"
+
+msgctxt "CenteredHud.Localization.STRINGS.GUIDES"
+msgid "Show HUD boundaries"
+msgstr "Показывать границы области"
+
+msgctxt "CenteredHud.Localization.STRINGS.SHORTCUTS"
+msgid "Enable keyboard shortcuts"
+msgstr "Включить горячие клавиши"
+
+msgctxt "CenteredHud.Localization.STRINGS.SHORTCUT_HINT"
+msgid "Ctrl + Shift + {0}: width  ·  Ctrl + Shift + {1}: settings"
+msgstr "Ctrl + Shift + {0}: ширина  ·  Ctrl + Shift + {1}: настройки"
+
+msgctxt "CenteredHud.Localization.STRINGS.SAVE_HINT"
+msgid "Changes save automatically. 0 uses the full screen width."
+msgstr "Изменения сохраняются автоматически. 0: вся ширина экрана."
+
+msgctxt "CenteredHud.Localization.STRINGS.SAVE_ERROR"
+msgid "Could not save settings. See Player.log for details."
+msgstr "Не удалось сохранить настройки. Подробнее в Player.log."
+
+msgctxt "CenteredHud.Localization.STRINGS.DONE"
+msgid "Done"
+msgstr "Готово"

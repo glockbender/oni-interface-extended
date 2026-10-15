@@ -1,0 +1,9 @@
+.tools/
+artifacts/
+bin/
+obj/
+*.user
+__pycache__/
+.venv/
+*.log
+*.tmp
