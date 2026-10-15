@@ -19,13 +19,13 @@ There is no Steam Workshop listing or public binary release yet. Build from sour
 
 The same paused test colony and camera at 5120 × 1440 / 110% UI scale. Full width:
 
-![Full-width HUD](docs/images/hud-full-width.png)
+![Full-width HUD](docs/images/hud-full-width.jpg)
 
 Centered 2560 px HUD:
 
-![Centered 2560 px HUD](docs/images/hud-2560.png)
+![Centered 2560 px HUD](docs/images/hud-2560.jpg)
 
-[English settings](docs/images/settings-en.png) · [Russian settings](docs/images/settings-ru.png) · [Capture metadata](docs/images/captures.json). These are unedited captures from the 1.3.0 local build. Open an image for full resolution.
+[English settings](docs/images/settings-en.jpg) · [Russian settings](docs/images/settings-ru.jpg) · [Capture metadata](docs/images/captures.json). These are unedited captures from the 1.3.0 local build. Open an image for full resolution.
 
 ## Install and use
 

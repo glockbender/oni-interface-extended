@@ -26,7 +26,7 @@ Windows, ONI U59-744825-SCRPAN / Unity 6000.3.5f2, 5120 × 1440, UI scale 110%. 
 - Boundary guides appeared at both 2560-region margins and disappeared when disabled. Their lack of input interception was inspected in source, not separately tested with a click on the line.
 - Done and Escape restored native Options; closing Options and the pause menu kept the initially-paused colony paused. Repeated width changes did not visibly accumulate displacement.
 - Clicked the shifted Base construction button, Dig tool, Vitals management button and Oxygen overlay. Each opened or activated its native interface. Selected a duplicant and terrain on both sides outside the central region; the details panel updated within the shifted right side. No orders were placed.
-- Captured the same paused colony/camera at full width and 2560, plus English settings, in [README screenshots](README.md#screenshots). Complete local PNG evidence and step configs are under `artifacts/runtime-1.3.0/isolated`.
+- Captured the same paused colony/camera at full width and 2560, plus English settings, in [README screenshots](README.md#screenshots). Complete local JPEG evidence and step configs are under `artifacts/runtime-1.3.0/isolated`.
 - Restored Russian through ONI's language screen and restarted. Native Options showed one translated entry; the Russian settings captions and main-menu preview hint rendered. Width `2560`, guides off and shortcuts off persisted. The native close button restored Options. Left ONI at its Russian main menu.
 
 ### Open checks and observed limitations

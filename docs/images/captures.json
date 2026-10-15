@@ -11,14 +11,14 @@
   "activeMods": [
     "prvz.CenteredHud"
   ],
-  "captureMethod": "Unedited Computer Use window PNGs; manual visual assessment.",
+  "captureMethod": "Unedited Computer Use window JPEGs; manual visual assessment.",
   "images": [
     {
-      "file": "hud-full-width.png",
+      "file": "hud-full-width.jpg",
       "timestamp": "2026-10-15T22:45:02.449Z",
       "sha256": "f4e8bd1e05fda18f5f10c1daf159b58f4fbca86553440c474d3bbb5b9765ed4c",
-      "width": 6291456,
-      "height": 4292542531,
+      "width": 5120,
+      "height": 1440,
       "config": {
         "Enabled": true,
         "WidthPixels": 5120,
@@ -30,11 +30,11 @@
       "note": "All menus closed; HUD full width; colony remains paused at initial camera."
     },
     {
-      "file": "hud-2560.png",
+      "file": "hud-2560.jpg",
       "timestamp": "2026-10-15T22:51:11.798Z",
       "sha256": "678c38a23f8b89e99939e02e27a1fab1fe72e0f6d152540a604cf5ac1cd0db02",
-      "width": 6291456,
-      "height": 4292542531,
+      "width": 5120,
+      "height": 1440,
       "config": {
         "Enabled": true,
         "WidthPixels": 2560,
@@ -46,11 +46,11 @@
       "note": "Paused baseline, 2560 HUD, guides and shortcuts off; same camera as full width."
     },
     {
-      "file": "settings-en.png",
+      "file": "settings-en.jpg",
       "timestamp": "2026-10-15T22:50:49.990Z",
       "sha256": "fea759041f6630066741d9ddd3bac2a0173abac688cdefd1e8dc870c25bd1002",
-      "width": 6291456,
-      "height": 4292542531,
+      "width": 5120,
+      "height": 1440,
       "config": {
         "Enabled": true,
         "WidthPixels": 2560,
@@ -62,11 +62,11 @@
       "note": "2560, guides off and shortcuts off; English settings after numeric clipping fix."
     },
     {
-      "file": "settings-ru.png",
+      "file": "settings-ru.jpg",
       "timestamp": "2026-10-15T22:55:43.263Z",
       "sha256": "93338b1feac478f6c724f1610ed84b1219068ac7663b241839aad2d01705ec92",
-      "width": 6291456,
-      "height": 4292542531,
+      "width": 5120,
+      "height": 1440,
       "config": {
         "Enabled": true,
         "WidthPixels": 2560,
