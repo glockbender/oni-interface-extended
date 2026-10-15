@@ -72,7 +72,7 @@ def main():
         }
         for key, value in strings.items():
             catalog.append(polib.POEntry(msgctxt=key, msgid=value, msgstr=""))
-        catalog.save(str(template_path))
+        catalog.save(str(template_path), newline="\n")
     check_catalog(template_path, strings, template=True)
     for path in sorted(CATALOGS.glob("*.po")):
         check_catalog(path, strings)

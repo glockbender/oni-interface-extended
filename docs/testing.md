@@ -17,11 +17,11 @@ GitHub Actions runs the game-independent checks. It does not have ONI installed,
 
 ## Manual regression scenario
 
-Use a new test colony, not Continue. Record the exact game build, DLC, complete world/settings coordinate, seed, difficulty, story/mixing settings, language, mod list, mod DLL hash, resolution and UI scale. Keep the camera in one place and pause the colony before comparing layouts.
+Create a dedicated test colony once and save it as `InterfaceExtended-TestBaseline`. Start routine runs by explicitly loading a working copy of that save through Load Game, rather than Continue or generating another world. Preserve the baseline outside the game's autosave rotation. Record its SHA-256 hash, exact game build, DLC, complete world/settings coordinate, seed, difficulty, story/mixing settings, language, mod list, mod DLL hash, resolution and UI scale. Keep the camera in one place and pause the colony before comparing layouts.
 
-1. In the main menu, open Settings. Confirm exactly one Interface Extended entry, open it, change a width and close it using the title-bar button. Confirm the native Settings panel returns.
-2. Start a fresh colony using the chosen preset and seed. Confirm no mod load/patch exception and that the saved width is applied.
-3. From Pause > Settings, open Interface Extended. Exercise full width, 3360 and 2560, then type 2720 in the field and commit it. Check the config and observed layout after each action.
+1. In the main menu, open Options. Confirm exactly one Interface Extended entry, open it, change a width and close it using the title-bar button. Confirm the native Options panel returns.
+2. Load the baseline test save. Confirm no mod load/patch exception and that the saved HUD width is applied. Test fresh-world creation separately when it is relevant; it is not required for each HUD regression run.
+3. From Pause > Options, open Interface Extended. Exercise full width, 3360 and 2560, then type 2720 in the field and commit it. Check the config and observed layout after each action.
 4. Select full width and press minus. At 5120 px and 110% UI scale the requested width should become 4960, not the minimum. Press plus and confirm it returns to 5120.
 5. Toggle boundary guides on/off. Check their visibility, positions and lack of mouse interception.
 6. Enable shortcuts, verify the displayed combinations, exercise both, then disable them and confirm they stop acting. Reset to 2560, guides off, shortcuts off.
@@ -51,7 +51,7 @@ The settings controls now have locale-independent object names such as `Interfac
 
 - Put the test agent in a separate local mod, excluded from normal release packages. An external PowerShell/Python runner supplies a fixed scenario through a local file queue with request IDs and timeouts. No network server or general-purpose code evaluation is needed.
 - Perform Unity operations on the main thread. Wait for specific screens, active/interactable controls and stable measured layout over consecutive frames. Use bounded deadlines, not fixed sleeps. Wait for a rendered frame before capture.
-- Start New Game through the normal flow, apply an explicit world preset/seed/settings, select starting duplicants and launch. Avoid Continue and existing personal saves. Pause immediately after the HUD is ready. A seed alone does not guarantee identical worlds across ONI versions, DLC or worldgen mods; record the full environment.
+- Create the dedicated baseline once through New Game with an explicit world preset/seed/settings. For routine runs, load a disposable copy of the baseline, wait for the HUD and pause. Avoid Continue and personal saves. Keep world-generation testing as a separate, infrequent scenario. Record the baseline hash and environment: a fixed save improves repeatability, but does not guarantee identical rendering or simulation across versions/mod lists.
 - For interaction tests, raycast at the visible target center and dispatch pointer/input events through Unity UI. Fail if another object blocks the target. Invoking `onClick` directly or setting config fields can help setup, but does not count as proof a player can click a control. Add an OS-input smoke scenario to cover game focus and hardware input separately.
 - Assert actual container anchors/world-space corners, canvas scale, effective width, active mod window count, config contents and pause state. Compare against independently specified expectations: at a 5120 px viewport, 2560 and 3360 widths have 1280 and 880 px margins before panel-specific offsets. Do not only compare the setting to the same value just assigned by the runner.
 - Run both initially-playing and initially-paused cases so a balanced modal pause count is observable after closing all menus. Test a lazy selection panel after it first appears. Deliberately change one expected width and verify that the suite fails; temporarily block a control and verify that the interaction check fails.
@@ -64,7 +64,7 @@ Each run should produce:
 
 ```text
 artifacts/runs/<run-id>/
-  manifest.json       # Build/DLL hash, environment, preset, scenario version
+  manifest.json       # Build/DLL hash, save hash, environment, scenario version
   results.json        # Steps, actions, assertions, timestamps, pass/fail
   01-full-width.png
   02-2560.png
@@ -78,6 +78,8 @@ artifacts/runs/<run-id>/
 ```
 
 This is a proposed output contract, not a fabricated sample run. Store image dimensions and SHA-256 hashes with step records. Include screenshots of the target after each mutation and after close/restore, not just a final image. Screenshots and numerical assertions serve different checks: one catches clipping or unexpected visuals, the other detects hidden state errors.
+
+The baseline should be a small, unbuilt cycle-1 colony, paused with a fixed camera and no modal or selected object. Keep an immutable original plus a working copy; test actions and autosaves may change the latter. Reset mod config separately because ONI saves do not contain this mod's settings. Use a separate baseline per game/DLC profile and revalidate it after an ONI update rather than silently replacing it. Save files remain local and are ignored by Git.
 
 For visual comparisons, crop to HUD regions and mask world animation, cursor, clock and notifications. Review baseline changes manually with an overlay/diff image; pixel-perfect full-screen comparisons will be noisy. Separate a tightly controlled test profile from a later compatibility run with other mods. Exclude test saves and large run artifacts from Git; retain them as CI artifacts or attach selected evidence to an issue/release.
 

@@ -10,9 +10,16 @@ Date: 2026-10-16 (Asia/Nicosia).
 - Production options checks passed for defaults, invalid widths, missing keys and preservation of intentional custom settings.
 - English template and Russian catalog validated: 15 entries each, matching source text and format placeholders.
 - Make check/build commands and the PowerShell package task completed locally. ZIP uses an explicit file allowlist; it does not contain game assemblies or research tools.
-- The installed 1.2.0 mod was left unchanged while the user played. None of the runtime observations below certify 1.3.0.
+- The installed 1.2.0 mod was initially left unchanged while the user played. After the user saved and closed ONI, 1.3.0 was installed for the checks below.
 
-Pending for 1.3.0: native localization loading, English/Russian text layout, settings-save error state, full-width step controls, fresh-colony regression and screenshots. The deterministic game test runner is researched in [testing](docs/testing.md) and is not implemented yet.
+### Initial 1.3.0 runtime check
+
+- Installed DLL matches the build: SHA-256 `254FD913E3776B616974D39B70DE37489B305B369D53F897547B3BEB98FE9F3F`.
+- Normal Steam launch logged `Loaded 1.3.0`. Russian native Options showed one translated mod entry. The settings window rendered translated captions/status and the native close button restored Options. A local screenshot records this check.
+- Switched ONI to English through its language screen and restarted successfully. Generated a separate Survival / Spaced Out / Terrania world: `SNDST-C-357424558-0-1A-CKZRH4Y1`. Cloud saving was disabled for this test colony.
+- Computer Use was stopped with the physical Escape key after generation. Colony controls, English mod captions and comparison screenshots were not yet verified. The user requested a reusable baseline save for subsequent runs instead of repeating world generation.
+
+Pending for 1.3.0: baseline-save creation, English/colony text layout, settings-save error state, full-width step controls, colony regression and README screenshots. The deterministic game test runner is researched in [testing](docs/testing.md) and is not implemented yet.
 
 ## Runtime environment for 1.0.0–1.2.0
 

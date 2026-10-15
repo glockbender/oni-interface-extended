@@ -12,6 +12,8 @@ Choose a 2560 px or 3360 px HUD, enter a custom width, or restore the full scree
 - Metadata allows the base game and DLC. Base-game-only play, other operating systems and other resolutions have not been tested in game.
 - Other mods that reposition the same HUD containers may conflict. Public testing branches are untested.
 
+[Compatibility review](docs/compatibility.md) explains potential interactions with DraggableUI, Fast Track, Clean HUD, Skills Info Screen, Better Info Cards and PLib Options. It is based on source inspection; it does not declare those mods incompatible or certify combinations.
+
 There is no Steam Workshop listing or public binary release yet. Build from source using the instructions below.
 
 ## Install and use
@@ -26,7 +28,7 @@ Build the mod, then copy the contents of `artifacts/CenteredHud` into a folder n
 
 On Windows, Documents can be redirected to OneDrive or another location. Use the actual Documents folder. Linux and macOS paths follow common ONI mod conventions; this project's build/install script is tested on Windows only.
 
-Enable **Interface Extended** in ONI's Mods menu and restart when prompted. Use **Settings > Interface Extended**, either from the main menu or the colony pause menu. With Russian selected, the entry is **Расширенный интерфейс**. Main-menu changes take effect when a colony loads; colony changes apply immediately.
+Enable **Interface Extended** in ONI's Mods menu and restart when prompted. Use **Options > Interface Extended**, either from the main menu or the colony pause menu. With Russian selected, the path is **Настройки > Расширенный интерфейс**. Main-menu changes take effect when a colony loads; colony changes apply immediately.
 
 The window provides width presets, a numeric field, 160 px steps, boundary guides and an optional shortcuts checkbox. Width is measured in physical viewport pixels. Small values are clamped to a minimum of 1280 logical UI pixels, so a large UI scale can produce a wider HUD than requested. Set width to `0` for full width.
 
