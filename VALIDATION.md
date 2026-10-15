@@ -12,14 +12,29 @@ Date: 2026-10-16 (Asia/Nicosia).
 - Make check/build commands and the PowerShell package task completed locally. ZIP uses an explicit file allowlist; it does not contain game assemblies or research tools.
 - The installed 1.2.0 mod was initially left unchanged while the user played. After the user saved and closed ONI, 1.3.0 was installed for the checks below.
 
-### Initial 1.3.0 runtime check
+### 1.3.0 runtime check
 
-- Installed DLL matches the build: SHA-256 `254FD913E3776B616974D39B70DE37489B305B369D53F897547B3BEB98FE9F3F`.
-- Normal Steam launch logged `Loaded 1.3.0`. Russian native Options showed one translated mod entry. The settings window rendered translated captions/status and the native close button restored Options. A local screenshot records this check.
-- Switched ONI to English through its language screen and restarted successfully. Generated a separate Survival / Spaced Out / Terrania world: `SNDST-C-357424558-0-1A-CKZRH4Y1`. Cloud saving was disabled for this test colony.
-- Computer Use was stopped with the physical Escape key after generation. Colony controls, English mod captions and comparison screenshots were not yet verified. The user requested a reusable baseline save for subsequent runs instead of repeating world generation.
+Windows, ONI U59-744825-SCRPAN / Unity 6000.3.5f2, 5120 × 1440, UI scale 110%. Only Interface Extended was enabled; all other mods were disabled for this run and left disabled at the user's request. All five installed DLC were available: Spaced Out!, Frosty Planet, Bionic Booster, Prehistoric Planet and Aquatic Planet. This does not establish base-game-only compatibility.
 
-Pending for 1.3.0: baseline-save creation, English/colony text layout, settings-save error state, full-width step controls, colony regression and README screenshots. The deterministic game test runner is researched in [testing](docs/testing.md) and is not implemented yet.
+- Created a separate Survival / Spaced Out / Terrania colony, `InterfaceExtended-TestBaseline`, with cloud saving off. Seed `520304708`; complete settings coordinate `SNDST-C-520304708-0-V9-CKZRH4Y1`. Native story/mixing settings are encoded in that coordinate.
+- Saved at cycle 1 with three starting duplicants, no construction orders, no selected object, no modal, initial camera unchanged and simulation paused. Preserved an immutable local copy outside autosave rotation, then explicitly loaded the working save through Load Game after a restart. No repeat world generation was needed.
+- Baseline file: 1,115,076 bytes; SHA-256 `396C37A58E33C9E40F843E4E85E515D9D1CF67529B37B181FF4E50D6CDCDC08D`. Save and its environment manifest remain local under `artifacts/test-fixtures`.
+- Found clipped numeric input text during the English check. Adjusted the cloned field's viewport/text alignment, rebuilt, installed while ONI was closed and repeated the check after a Steam launch. Digits and caret rendered inside the field; typing `2720` and pressing Enter changed both the effective layout and saved config.
+- Final tested DLL SHA-256: `092C0BA4AC1193F907165DD6A791AF32613643DD40E2D342B75436D4AA220F6C`. Built and installed files match. The baseline was originally created with an earlier 1.3.0 build; its manifest retains that creation hash.
+- Player.log recorded `Loaded 1.3.0`, nine tracked HUD containers, and the explicit baseline load. No managed mod exception or layout-restoration warning appeared during these interactions.
+- English colony settings rendered their translated status, controls and shortcut hint. Full width restored the edge positions; minus from full width produced `4960`, plus returned to `5120`. The `3360`, `2560` and custom `2720` widths applied immediately and persisted to config.
+- Boundary guides appeared at both 2560-region margins and disappeared when disabled. Their lack of input interception was inspected in source, not separately tested with a click on the line.
+- Done and Escape restored native Options; closing Options and the pause menu kept the initially-paused colony paused. Repeated width changes did not visibly accumulate displacement.
+- Clicked the shifted Base construction button, Dig tool, Vitals management button and Oxygen overlay. Each opened or activated its native interface. Selected a duplicant and terrain on both sides outside the central region; the details panel updated within the shifted right side. No orders were placed.
+- Captured the same paused colony/camera at full width and 2560, plus English settings, in [README screenshots](README.md#screenshots). Complete local PNG evidence and step configs are under `artifacts/runtime-1.3.0/isolated`.
+- Restored Russian through ONI's language screen and restarted. Native Options showed one translated entry; the Russian settings captions and main-menu preview hint rendered. Width `2560`, guides off and shortcuts off persisted. The native close button restored Options. Left ONI at its Russian main menu.
+
+### Open checks and observed limitations
+
+- Injected Ctrl+Shift+F8/F9 did not trigger actions even with shortcuts enabled. The cause is unresolved; no physical-keyboard pass is claimed. Shortcuts were disabled again. Mouse controls passed.
+- The language restart produced a native crash after input/physics shutdown. Its native stack contains UnityPlayer and Steam's `gameoverlayrenderer64`; there is no managed mod stack establishing a cause. The new Russian process started successfully. No mod-disabled comparison was performed, so attribution remains open.
+- Settings-save error UI, malformed/unwritable config in game, initially-playing pause restoration, other resolutions/UI scales and long translations remain untested.
+- The deterministic game test runner is researched in [testing](docs/testing.md) and is not implemented. This was a manual Computer Use run with screenshots and config evidence.
 
 ## Runtime environment for 1.0.0–1.2.0
 

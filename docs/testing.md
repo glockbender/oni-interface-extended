@@ -83,6 +83,8 @@ The baseline should be a small, unbuilt cycle-1 colony, paused with a fixed came
 
 For visual comparisons, crop to HUD regions and mask world animation, cursor, clock and notifications. Review baseline changes manually with an overlay/diff image; pixel-perfect full-screen comparisons will be noisy. Separate a tightly controlled test profile from a later compatibility run with other mods. Exclude test saves and large run artifacts from Git; retain them as CI artifacts or attach selected evidence to an issue/release.
 
-## Repository screenshots still needed
+## Recorded manual run
 
-For the English README, capture the same paused colony and camera at full width and 2560 px, plus the English settings window. Keep 5120 × 1440 / 110% for the first comparison. These must be real 1.3.0 captures after runtime verification. No placeholder images are presented as screenshots.
+The 2026-10-16 manual run created `InterfaceExtended-TestBaseline`, preserved an immutable local copy and explicitly loaded the save after restarting ONI. Only Interface Extended was enabled. [Validation](../VALIDATION.md) records the environment, hashes, passed interactions and unresolved checks.
+
+Selected unedited 1.3.0 captures are committed in [images](images): full width and 2560 from the same paused camera, plus English and Russian settings. The complete local evidence is in `artifacts/runtime-1.3.0/isolated`: PNG captures, per-step timestamps/config, image hashes, a manifest and an HTML gallery. It records Computer Use actions and human visual assessment; it is not a deterministic runner or a set of machine-asserted Unity measurements. Saves and full logs remain local.

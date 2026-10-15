@@ -19,6 +19,7 @@ Reviewed every tracked C# source file, mod metadata/default config, PowerShell/P
 | Documentation mixed historical plans and current instructions | Remove the completed plan; separate README, changelog, translation/testing instructions and versioned validation. |
 | No basic repository workflow | Add Make/PowerShell task entry points, headless checks, CI, MIT license, issue/PR templates and formatting rules. |
 | Duplicate native clone names would make future UI selectors ambiguous | Give mod-owned controls stable names independent of language. |
+| Native filename-input text insets clipped digits in the shorter settings row | Fit the text viewport to the row and align the text vertically; verified typing and committing 2720 in ONI. |
 
 The original namespace/DLL name, static ID and config location are retained intentionally for upgrade compatibility. Dead `Reload` and root-count members were removed. Geometry and option normalization remain independent of Unity so their checks use the actual production code.
 
@@ -33,7 +34,7 @@ Used the requested [article](https://www.opensourceprojects.dev/post/anti-slop) 
 - **Content:** descriptions state the one implemented feature and its controls. No invented metrics, testimonials, performance claims, future-feature advertising, decorative badges or mock screenshots.
 - **UI direction:** use ONI's title bar, buttons, fonts, checkbox rows and input field because the window is part of ONI Settings. Boundary lines exist only as an optional layout guide. No new visual theme or generated artwork.
 - **Code:** comments explain anchor preservation, native modal ownership, locale codes or game-specific assumptions. No decorative banners, per-line narration or generic abstraction layer.
-- **Function:** existing 1.2.0 mouse interactions have runtime evidence. The new 1.3.0 captions/error state and refactored width steps still require game checks. A successful build is not recorded as a passed click-through.
+- **Function:** 1.3.0 mouse interactions, English/Russian captions, width steps and baseline loading have runtime evidence and real screenshots. Save-error UI and optional keyboard shortcuts remain unverified. A successful build is not recorded as a passed click-through.
 - **Accessibility/layout:** Escape closes the modal and the input supports typing. Full keyboard traversal, contrast measurements, long translations and alternate resolutions have not been verified. Native styling alone is not proof of accessibility.
 
 ## Remaining risks
@@ -41,4 +42,5 @@ Used the requested [article](https://www.opensourceprojects.dev/post/anti-slop) 
 - Harmony patches and prefab paths depend on ONI internals; a game update can change them.
 - Mods that alter the same anchors or modal hierarchy can interact with this mod.
 - Automated geometry/options/catalog checks do not validate Unity rendering or mouse hit testing.
-- English/Russian 1.3.0 runtime checks, new-game regression, screenshot evidence and a deterministic game-side test runner are still pending. No public release is claimed ready on the strength of static checks alone.
+- Other resolutions/scales, save-error UI, initially-playing pause restoration and physical shortcuts still need runtime checks. A native shutdown crash occurred during the language restart; its cause is unconfirmed. See [validation](../VALIDATION.md).
+- The deterministic game-side test runner is researched but not implemented. No public binary release is claimed ready on the strength of static checks alone.

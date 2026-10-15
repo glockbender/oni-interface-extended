@@ -140,6 +140,20 @@ namespace CenteredHud
             RectTransform field = Clone(fieldTemplate.gameObject, layout, 28, -57, 142, 32);
             field.name = "Width";
             widthInput = field.GetComponent<KInputTextField>();
+            // The filename prefab's text insets assume a taller input field.
+            RectTransform viewport = widthInput.textViewport;
+            viewport.anchorMin = Vector2.zero;
+            viewport.anchorMax = Vector2.one;
+            viewport.offsetMin = new Vector2(8, 2);
+            viewport.offsetMax = new Vector2(-8, -2);
+            TMP_Text inputText = widthInput.textComponent;
+            inputText.rectTransform.anchorMin = Vector2.zero;
+            inputText.rectTransform.anchorMax = Vector2.one;
+            inputText.rectTransform.offsetMin = inputText.rectTransform.offsetMax = Vector2.zero;
+            inputText.margin = Vector4.zero;
+            inputText.enableAutoSizing = false;
+            inputText.fontSize = labelTemplate.fontSize;
+            inputText.alignment = TextAlignmentOptions.MidlineLeft;
             widthInput.onEndEdit.RemoveAllListeners();
             widthInput.onValueChanged.RemoveAllListeners();
             widthInput.OnValueChangesPaused = null;

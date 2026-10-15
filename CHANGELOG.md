@@ -5,6 +5,7 @@
 - Use English as the source language for all mod UI text.
 - Register strings with ONI's localization system; include a Russian catalog and a translation template.
 - Make width steps start from the effective HUD width, including when leaving full-width mode.
+- Fix clipped digits in the native numeric field when used at the settings row height.
 - Refresh status text when values change instead of formatting it every frame.
 - Display a settings-save error in the window if writing the config fails.
 - Add assembly version metadata, build instructions, repository checks and contribution templates.

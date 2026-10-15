@@ -1,0 +1,81 @@
+{
+  "gameBuild": "U59-744825-SCRPAN",
+  "modVersion": "1.3.0",
+  "dllSha256": "092C0BA4AC1193F907165DD6A791AF32613643DD40E2D342B75436D4AA220F6C",
+  "saveSha256": "396C37A58E33C9E40F843E4E85E515D9D1CF67529B37B181FF4E50D6CDCDC08D",
+  "viewport": [
+    5120,
+    1440
+  ],
+  "uiScalePercent": 110,
+  "activeMods": [
+    "prvz.CenteredHud"
+  ],
+  "captureMethod": "Unedited Computer Use window PNGs; manual visual assessment.",
+  "images": [
+    {
+      "file": "hud-full-width.png",
+      "timestamp": "2026-10-15T22:45:02.449Z",
+      "sha256": "f4e8bd1e05fda18f5f10c1daf159b58f4fbca86553440c474d3bbb5b9765ed4c",
+      "width": 6291456,
+      "height": 4292542531,
+      "config": {
+        "Enabled": true,
+        "WidthPixels": 5120,
+        "ShowGuides": false,
+        "EnableShortcuts": true,
+        "CycleKey": "F8",
+        "SettingsKey": "F9"
+      },
+      "note": "All menus closed; HUD full width; colony remains paused at initial camera."
+    },
+    {
+      "file": "hud-2560.png",
+      "timestamp": "2026-10-15T22:51:11.798Z",
+      "sha256": "678c38a23f8b89e99939e02e27a1fab1fe72e0f6d152540a604cf5ac1cd0db02",
+      "width": 6291456,
+      "height": 4292542531,
+      "config": {
+        "Enabled": true,
+        "WidthPixels": 2560,
+        "ShowGuides": false,
+        "EnableShortcuts": false,
+        "CycleKey": "F8",
+        "SettingsKey": "F9"
+      },
+      "note": "Paused baseline, 2560 HUD, guides and shortcuts off; same camera as full width."
+    },
+    {
+      "file": "settings-en.png",
+      "timestamp": "2026-10-15T22:50:49.990Z",
+      "sha256": "fea759041f6630066741d9ddd3bac2a0173abac688cdefd1e8dc870c25bd1002",
+      "width": 6291456,
+      "height": 4292542531,
+      "config": {
+        "Enabled": true,
+        "WidthPixels": 2560,
+        "ShowGuides": false,
+        "EnableShortcuts": false,
+        "CycleKey": "F8",
+        "SettingsKey": "F9"
+      },
+      "note": "2560, guides off and shortcuts off; English settings after numeric clipping fix."
+    },
+    {
+      "file": "settings-ru.png",
+      "timestamp": "2026-10-15T22:55:43.263Z",
+      "sha256": "93338b1feac478f6c724f1610ed84b1219068ac7663b241839aad2d01705ec92",
+      "width": 6291456,
+      "height": 4292542531,
+      "config": {
+        "Enabled": true,
+        "WidthPixels": 2560,
+        "ShowGuides": false,
+        "EnableShortcuts": false,
+        "CycleKey": "F8",
+        "SettingsKey": "F9"
+      },
+      "note": "Russian settings after restart; persisted 2560 and both toggles off; main-menu preview hint."
+    }
+  ]
+}

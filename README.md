@@ -6,8 +6,7 @@ Choose a 2560 px or 3360 px HUD, enter a custom width, or restore the full scree
 
 ## Status and compatibility
 
-- **1.2.0:** tested in a colony on Windows, ONI U59-744825-SCRPAN, Spaced Out!, 5120 × 1440, UI scale 110%.
-- **1.3.0 source:** English default text, Russian translation, translation support and maintenance fixes. Compiles against that game build; in-game verification is pending. See [validation](VALIDATION.md).
+- **1.3.0 local build:** mouse controls tested in a separate colony on Windows, ONI U59-744825-SCRPAN, Spaced Out!, 5120 × 1440, UI scale 110%. English and Russian settings verified. See [validation and remaining checks](VALIDATION.md).
 - No external mod dependency. Harmony and UI components come from ONI.
 - Metadata allows the base game and DLC. Base-game-only play, other operating systems and other resolutions have not been tested in game.
 - Other mods that reposition the same HUD containers may conflict. Public testing branches are untested.
@@ -15,6 +14,18 @@ Choose a 2560 px or 3360 px HUD, enter a custom width, or restore the full scree
 [Compatibility review](docs/compatibility.md) explains potential interactions with DraggableUI, Fast Track, Clean HUD, Skills Info Screen, Better Info Cards and PLib Options. It is based on source inspection; it does not declare those mods incompatible or certify combinations.
 
 There is no Steam Workshop listing or public binary release yet. Build from source using the instructions below.
+
+## Screenshots
+
+The same paused test colony and camera at 5120 × 1440 / 110% UI scale. Full width:
+
+![Full-width HUD](docs/images/hud-full-width.png)
+
+Centered 2560 px HUD:
+
+![Centered 2560 px HUD](docs/images/hud-2560.png)
+
+[English settings](docs/images/settings-en.png) · [Russian settings](docs/images/settings-ru.png) · [Capture metadata](docs/images/captures.json). These are unedited captures from the 1.3.0 local build. Open an image for full resolution.
 
 ## Install and use
 
@@ -32,7 +43,7 @@ Enable **Interface Extended** in ONI's Mods menu and restart when prompted. Use 
 
 The window provides width presets, a numeric field, 160 px steps, boundary guides and an optional shortcuts checkbox. Width is measured in physical viewport pixels. Small values are clamped to a minimum of 1280 logical UI pixels, so a large UI scale can produce a wider HUD than requested. Set width to `0` for full width.
 
-Shortcuts are off by default. When enabled, **Ctrl+Shift+F8** cycles 2560 / 3360 / full width and **Ctrl+Shift+F9** opens settings.
+Shortcuts are off by default. When enabled, **Ctrl+Shift+F8** is intended to cycle 2560 / 3360 / full width and **Ctrl+Shift+F9** to open settings. The injected-key smoke check did not trigger either action; physical-keyboard verification remains open. All settings are available by mouse.
 
 To update a local installation, close ONI and replace the DLL, metadata and shipped translation files. Keep your existing `config.json`. Enable only one copy of the mod. To remove it, disable it in Mods and restart, then remove its folder if desired. The mod writes settings to its own folder and does not add save-file data.
 
