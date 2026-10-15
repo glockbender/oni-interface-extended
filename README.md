@@ -25,7 +25,11 @@ Centered 2560 px HUD:
 
 ![Centered 2560 px HUD](docs/images/hud-2560.jpg)
 
-[English settings](docs/images/settings-en.jpg) · [Russian settings](docs/images/settings-ru.jpg) · [Capture metadata](docs/images/captures.json). These are unedited captures from the 1.3.0 local build. Open an image for full resolution.
+Settings window:
+
+![Interface Extended settings window](docs/images/settings-en.jpg)
+
+[Russian settings](docs/images/settings-ru.jpg) · [Capture metadata](docs/images/captures.json). These are unedited captures from the 1.3.0 local build. Open an image for full resolution.
 
 ## Install and use
 
