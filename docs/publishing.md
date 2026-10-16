@@ -1,6 +1,6 @@
 # Publishing
 
-Operational notes for the current private Workshop draft. [Workshop preparation](workshop.md) owns the README exporter and image contract; [validation](../VALIDATION.md) owns binary hashes and game-test evidence.
+Operational notes for the Workshop item. [Workshop preparation](workshop.md) owns the README exporter and image contract; [validation](../VALIDATION.md) owns binary hashes and game-test evidence.
 
 ## Item and current state
 
@@ -10,7 +10,7 @@ The permanent item is [Interface Extended — 3820540318](https://steamcommunity
 - The owner page's **Allow Comments** checkbox was unchecked. Support is through GitHub Issues.
 - The three gallery images persisted in README order. The rendered description includes repository and Issues links; the preview and comment setting were checked again after saving.
 - A subscribed download passed the HUD/settings scenario in ONI. The local duplicate and development agent are now disabled; the Workshop copy is enabled. Exact results and cleanup evidence are in validation.
-- No public release is recorded. Public visibility is a separate action after review.
+- The owner made the item public after review. A subsequent SDK query confirmed Public (`0`), with the same package and preview sizes. Version 1.4.0 is the first public release.
 
 ## Why the first upload used the SDK
 
@@ -39,7 +39,9 @@ If an operation times out or the process exits, preserve the receipt. An unknown
 
 For a routine update, regenerate the README export, build the clean player package and update this same item. The creation helper does not implement an update command. The verified description-only update used `CreatePublishedFileUpdateRequest(item)` → `UpdatePublishedFileDescription` → `UpdatePublishedFileVisibility(2)` → `CommitPublishedFileUpdate`. Its result callback is `1316`, with the same 24-byte Win64 result layout as creation. A subsequent details query confirmed exact description bytes and retained visibility, owner, title, file/preview sizes and tags. That operation's local helper and receipt are `artifacts/update-private-description.py` and `artifacts/private-description-update.json`.
 
-Package or preview updates require their corresponding SDK setters as well; the description-only update is not evidence for those paths. Review inputs, persist a new operation receipt before committing, retain the original creation receipt, and query the result afterward. Preserve Private explicitly until release. Never switch to the uploader's Add form to work around an update problem.
+After the owner made the item public, `artifacts/update-public-description.py` applied the release-status text using only the description setter. It required Public before committing and verified Public afterward, without calling a visibility setter. Receipt: `artifacts/public-description-update.json`. This avoids reverting the published item through the historical private helper.
+
+Package or preview updates require their corresponding SDK setters as well; the description-only update is not evidence for those paths. Review inputs, persist a new operation receipt before committing, retain the original creation receipt, and query the result afterward. Preserve the item's current visibility; the historical private-update helper explicitly sets Private and must not be reused unchanged for this now-public item. Never switch to the uploader's Add form to work around an update problem.
 
 ## Owner-page work
 
@@ -49,4 +51,4 @@ Keep comments disabled and verify that GitHub Issues is reachable from the rende
 
 Before making the item public, inspect its actual visibility, title, preview, description, gallery order, tags and comment setting. Verify a subscribed download in ONI with the local duplicate disabled, preserving the user's collection and shared config. Check the public mod ID, persisted settings and the relevant HUD/settings scenario. Record the result in validation; do not report the local-install test as a subscribed-install pass.
 
-Update README's release status and regenerate the description when publication is ready. Apply the matching description to the existing item and verify it while private. Change visibility only as the final reviewed release action; neither the exporter nor the diagnostic commands do that.
+For a future private draft, update README's release status and regenerate the description when publication is ready. Apply the matching description and verify it while private. Change visibility only as the final reviewed release action; neither the exporter nor the diagnostic commands do that. Routine updates to the published item retain Public visibility.

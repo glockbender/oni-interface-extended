@@ -11,14 +11,14 @@ Choose a 2560 px or 3360 px HUD, enter a custom width, or restore the full scree
 <!-- workshop:compatibility:start -->
 ## Compatibility
 
-- Version 1.4.0 is currently an unreleased local build. Checked on Windows, ONI U59-744825-SCRPAN, Spaced Out!, 5120 × 1440, UI scale 110%.
+- Version 1.4.0. Checked on Windows, ONI U59-744825-SCRPAN, Spaced Out!, 5120 × 1440, UI scale 110%.
 - No external mod dependency. Harmony and UI components come from ONI.
 - Metadata allows the base game and DLC. Base-game-only play, other operating systems, other resolutions and public testing branches remain untested.
 - Other mods that reposition the same HUD containers may conflict. See the [compatibility notes](docs/compatibility.md).
 - Optional keyboard shortcuts remain unverified. Every setting is available by mouse.
 <!-- workshop:compatibility:end -->
 
-There is no public Steam Workshop or binary release yet. See [build instructions](docs/development.md#build) to prepare a local copy.
+Install from [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3820540318), then enable the mod in ONI. To prepare a local copy instead, see the [build instructions](docs/development.md#build).
 
 <!-- workshop:screenshots:start -->
 ## Screenshots

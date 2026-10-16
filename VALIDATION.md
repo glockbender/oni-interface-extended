@@ -2,6 +2,12 @@
 
 Date: 2026-10-16 (Asia/Nicosia).
 
+## Public release
+
+After review, the owner made Workshop item 3820540318 public. An authenticated SDK query confirmed visibility `0`, the same title, package size of 15,964 bytes and preview size of 8,241 bytes. The query receipt is `artifacts/public-release-query.json`. No release binary changed; the subscribed-installation results below apply to the published package.
+
+Updated README and the Workshop description to remove the unreleased status. The description-only commit returned success; a separate details query confirmed exact exported text and unchanged Public visibility, title, owner, package/preview sizes and tags. Receipt: `artifacts/public-description-update.json`.
+
 ## Private Workshop draft
 
 - Created [item 3820540318](https://steamcommunity.com/sharedfiles/filedetails/?id=3820540318) using the installed uploader's Steam SDK and existing Steam session. The creation request explicitly used Private (`2`). The SDK returned success; a separate details query confirmed visibility `2`, creator app `636750`, consumer app `457140`, matching title/description and expected tags. No public visibility was requested. The callback did not require accepting the Workshop agreement again.
@@ -26,7 +32,7 @@ Date: 2026-10-16 (Asia/Nicosia).
 - CI uses the shared check task so a failed command cannot be hidden by a later successful one. README/Workshop text, the cover and three-image gallery were reviewed together. The approved IE+ icon was inspected at 512 and 64 pixels and on the rendered private Steam item.
 - No production runtime code or release binary changed during this review. [Review notes](docs/review.md) record findings and remaining limits.
 
-## Unreleased 1.4.0: identity and config storage
+## 1.4.0: identity and config storage
 
 - Public static ID is `InterfaceExtended`; ONI's loader reported the new ID and zero broken installations. The local folder/DLL and C# namespaces remain `CenteredHud`; no duplicate installation was created.
 - Built against U59-744825 with warnings as errors and the game contract check, including `KMod.Manager.GetDirectory`. Production DLL SHA-256: `7DBE7CF1693824462359C4FE077C07B87AA745172DA31B1FDAA1843E6E21A91D`.
@@ -41,7 +47,7 @@ Date: 2026-10-16 (Asia/Nicosia).
 
 A subscribed Workshop delivery and description update passed as recorded above. Package replacement through Workshop, base-game-only runtime, other operating systems, physical shortcuts and in-game config error UI remain untested. Earlier screenshots and runtime results below retain their original version labels.
 
-## Unreleased 1.3.0: source and build checks
+## Local 1.3.0: source and build checks
 
 - Built against ONI U59-744825 with Roslyn 4.14.0, warnings treated as errors.
 - Game contract check passed: named Harmony patch targets, reflected OptionsMenuScreen/KButtonMenu/KModalButtonMenu fields, absence of host `System.Private.CoreLib` references, DLL version matching mod metadata.

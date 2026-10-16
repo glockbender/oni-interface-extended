@@ -1,7 +1,8 @@
 # Changelog
 
-## 1.4.0 (unreleased)
+## 1.4.0 (2026-10-16)
 
+- First public Steam Workshop release, including the features developed in the earlier local builds below.
 - Use `InterfaceExtended` as the public mod ID; replace the earlier local copy when updating.
 - Store settings in ONI's `mods/config/InterfaceExtended/config.json` so installation updates cannot replace them. Import a legacy config only if the shared file is absent; preserve its source and report migration write failures.
 - Load bundled translations from the installation directory independently of config storage.
@@ -10,7 +11,7 @@
 - Add repository working instructions and filesystem regression checks for migration and update persistence.
 - Retry transient Windows sharing/lock errors when the test agent publishes bridge JSON.
 
-## 1.3.0 (unreleased)
+## 1.3.0 (local build, 2026-10-16)
 
 - Use English as the source language for all mod UI text.
 - Register strings with ONI's localization system; include a Russian catalog and a translation template.
