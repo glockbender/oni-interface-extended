@@ -21,4 +21,10 @@ README declares exactly one standalone HTML image below its title: `docs/images/
 
 `docs/images/icon.svg` is the editable vector source. When changing it, re-export the 512 × 512 PNG, for example with Sharp, and regenerate the manifest. Node/Sharp is optional artwork tooling, not a dependency of normal checks, builds or Workshop export. Inspect the description, item cover and gallery previews before publication.
 
-The Workshop item and binary release are not published yet. When publication is authorized, set the description from the export, upload the listed images, link support to GitHub Issues and disable Workshop comments. Then update README's publication/version status and regenerate. This script prepares local files only; it does not publish, change remote settings or require Steam credentials.
+## First upload and release
+
+The Workshop item and binary release are not published yet. Oxygen Not Included Uploader was installed and its Add form prepared locally on 2026-10-16, but Publish was not submitted. This version's ONI form has no visibility selector; do not assume it creates a private draft. Establish a route that explicitly sets Private before making the first upload. Steam documents Private as visibility value `2`, distinct from Public (`0`) and Unlisted (`3`), in its [visibility enum](https://partner.steamgames.com/doc/api/ISteamRemoteStorage#ERemoteStoragePublishedFileVisibility).
+
+Upload only the clean package directory, use the README-derived description and preview, then add the three gallery images. Record the returned Workshop ID and reuse it for updates; never create a replacement item for a routine release. Verify the item's actual visibility, rendered description, gallery order, GitHub Issues support link and disabled comments while it is private.
+
+Before public release, verify a subscribed download in ONI with the local duplicate disabled, checking the public ID, persisted settings, translations and HUD/settings scenario. Keep the user's collection and config intact. Update README's publication/version status and regenerate the description once the item URL and release status are known. Public visibility is a separate final action after review. This exporter prepares local files only; it does not publish, change remote settings or require Steam credentials.
