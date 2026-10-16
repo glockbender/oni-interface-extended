@@ -7,6 +7,8 @@ player's requested behavior and compatible with the retail game's runtime.
 
 - README owns the English product description, usage, compatibility limits and
   support links. Generate Workshop text from it; do not maintain a second copy.
+- [Publishing](docs/publishing.md) owns the Workshop item identity and verified
+  upload/recovery procedure. Update that item rather than creating a replacement.
 - Runtime source owns behavior and defaults. Mod metadata and assembly versions
   must agree. The public mod ID is `InterfaceExtended`; `prvz.CenteredHud` is a
   legacy local identity. Existing C# namespaces and DLL names are implementation

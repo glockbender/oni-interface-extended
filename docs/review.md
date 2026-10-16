@@ -25,11 +25,13 @@ The original namespace/DLL name is retained. Version 1.4.0 adopts public ID `Int
 
 ## Publication preparation follow-up
 
-An independent second code review found two gaps in the development harness: a successful step could lack its own screenshot, and the production HUD's caught layout-error warning could escape the error collector. The runner now requires a validated primary PNG for every successful step; the agent treats that specific warning as failure. Regression tests cover missing and dialog-only evidence while preserving the original error for an already-failed step. The rebuilt agent has not been rerun in ONI; previous runtime results keep their original binary hashes.
+An independent second code review found two gaps in the development harness: a successful step could lack its own screenshot, and the production HUD's caught layout-error warning could escape the error collector. The runner now requires a validated primary PNG for every successful step; the agent treats that specific warning as failure. Regression tests cover missing and dialog-only evidence while preserving the original error for an already-failed step. The rebuilt agent passed the subscribed Workshop scenario; previous runtime results keep their original binary hashes. The earlier strict and negative-control runs were not repeated against this later agent.
 
 CI now delegates to the shared check task, which propagates each command's failure. This removes a multi-command step that could hide a failed unittest invocation. Make targets share their identical recipe. The Workshop exporter validates a separate 512 × 512 cover, preserves the three README gallery images in order, and detects stale exports.
 
 README now contains player-facing information. Build/config details live in the development guide; runtime setup and artifact definitions live in the harness reference; exact run/hash history lives only in validation. Russian support is mentioned once in README's Languages section. The translated settings capture remains archived evidence, outside the product gallery.
+
+The verified semi-automatic publishing procedure was saved in [publishing](publishing.md) before the final documentation review. It distinguishes private creation, description updates, manual owner-page work and the remaining public release action. README remains the single source for product text and support links. The subscribed-installation pass verifies the delivered binary; it does not establish package-update behavior or every interaction with the user's collection.
 
 ## Mod repository conventions
 

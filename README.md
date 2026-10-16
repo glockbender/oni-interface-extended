@@ -71,6 +71,8 @@ The UI defaults to English and follows the game's selected language when a trans
 <!-- workshop:support:start -->
 ## Support
 
+Source code and contributions: [GitHub repository](https://github.com/glockbender/oni-interface-extended).
+
 Report a problem in [GitHub Issues](https://github.com/glockbender/oni-interface-extended/issues), including the game/mod version, resolution, UI scale, reproduction steps and relevant `Player.log` output. Remove personal paths from logs before posting. Support is handled on GitHub.
 <!-- workshop:support:end -->
 
