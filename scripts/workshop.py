@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import struct
 import sys
 from urllib.parse import quote, urlsplit
 
@@ -132,11 +133,21 @@ def export(root):
     root = root.resolve()
     source = (root / "README.md").read_text(encoding="utf-8")
     images = []
+    covers = re.findall(r'<img\b[^>]*\bsrc="([^"]+)"[^>]*>', source)
+    if len(covers) != 1:
+        raise ExportError("README must declare one cover using an HTML img element")
+    cover_url, cover_source = reference(covers[0], root, image=True)
+    cover = (root / cover_source).read_bytes()
+    if (not cover_source.endswith(".png") or cover[:8] != b"\x89PNG\r\n\x1a\n"
+            or len(cover) < 24 or struct.unpack(">II", cover[16:24]) != (512, 512)):
+        raise ExportError("Workshop cover must be a 512 x 512 PNG")
+    preview = {"source": cover_source, "url": cover_url,
+               "sha256": hashlib.sha256(cover).hexdigest(), "width": 512, "height": 512}
     description = "\n\n".join(convert(text, root, images) for _, text in sections(source)) + "\n"
     if not images:
         raise ExportError("README must include actual screenshots in its Workshop sections")
     manifest = {"schemaVersion": 1, "readmeSha256": hashlib.sha256(source.encode("utf-8")).hexdigest(),
-                "images": images}
+                "preview": preview, "images": images}
     return {"description.bbcode": description,
             "screenshots.json": json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"}
 

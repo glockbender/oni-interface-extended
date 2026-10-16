@@ -74,11 +74,11 @@ The fixed scenario checks:
 - Numeric `2720`, minus from full width and plus back to viewport width, config writes, guide visibility/anchors and non-interception flag, and the shortcut setting toggle.
 - All nine named HUD roots: anchors, screen-space corners, unchanged size/position offsets and canvas scale. Expected margins come from independent equations in the test, not calls into production geometry code. At 5120 px, the preset margins are 1280 and 880 px. Tolerances are one screen pixel and 0.00001 for anchors.
 - Done/parent restoration, repeated opening and balanced pause ownership for initially-paused and initially-playing cases.
-- No new error/exception/assert log entries during the run; restoration of the original in-memory settings and exact config bytes.
+- No new error/exception/assert log entries or production HUD layout-restoration warning during the run; restoration of the original in-memory settings and exact config bytes.
 
 Controls are located by object names or native callback/user-data IDs. The driver raycasts at the visible center, checks focus/interactability and the first input receiver, then dispatches Unity pointer events. It fails when an overlay intercepts the click. Main-menu Options, pause-menu setup and save loading use native game methods; those navigation actions are not physical-input tests. Numeric input uses a raycast/focus check followed by a component text edit and end-edit commit. It does not prove hardware keyboard input, Escape or shortcuts work.
 
-Layout readiness requires unchanged measured rectangles over consecutive rendered frames and bounded deadlines, rather than a long fixed sleep. Screenshots follow `WaitForEndOfFrame`; the agent decodes them and the runner independently validates PNG chunks, checksums, compressed scanlines, dimensions and hashes. The HTML gallery displays only validated local images. It supports visual review; it does not automatically decide whether styling, clipping or translation looks correct.
+Layout readiness requires unchanged measured rectangles over consecutive rendered frames and bounded deadlines, rather than a long fixed sleep. Screenshots follow `WaitForEndOfFrame`; the agent decodes them and the runner independently validates PNG chunks, checksums, compressed scanlines, dimensions and hashes. Every successful step needs its own primary PNG; an optional dialog capture does not substitute for it. The HTML gallery displays only validated local images. It supports visual review; it does not automatically decide whether styling, clipping or translation looks correct.
 
 Run output defaults to a fresh `artifacts/runs/<timestamp>-<id>` directory:
 
@@ -95,19 +95,7 @@ Neither these local files nor saves are committed. They are real run evidence wh
 
 ## Recorded runtime checks
 
-On 2026-10-16, at 5120 × 1440 / 110% UI scale:
-
-| Local run directory | Result |
-| --- | --- |
-| `20261016T000221Z-049c56a6` | Production 1.4.0, local profile: 20 steps / 20 validated PNGs, no mod-difference dialog encountered. Writes used the shared config path; original bytes were restored. |
-| `20261015T233020Z-48008de9` | Local profile passed: 20 steps, 21 validated PNGs including the recognized mod-difference dialog. |
-| `20261015T233250Z-083e6ed5` | Strict/default profile passed: 20 steps, 20 validated PNGs, no mod-difference dialog. |
-| `20261015T233421Z-4cc97db4` | Wrong-width negative control returned exit 1 at `preset-2560`: measured left anchor `0.25`, deliberately expected `0.2421875`. Original config bytes were restored. |
-| `20261015T234130Z-b7a4e162` | Final agent build, strict/default profile passed: exit 0, 20 steps, 20 validated PNGs. |
-| `20261015T234212Z-e59aaa8e` | Final agent build, blocked-control negative returned exit 1 at `preset-2560`: `Preset2560` was blocked by `InterfaceExtendedTestBlocker`. Failure PNG and exact config restoration were recorded. |
-| `20261015T234304Z-ffafc8b1` | Final agent build, wrong-width negative returned exit 1 at `preset-2560`, with the same intended anchor mismatch, failure PNG and exact config restoration. |
-
-These runs used 29 active mods including the development agent. They verify the listed HUD scenario for that collection, not an isolated compatibility test or general gameplay. The 1.3.0 agent's final DLL SHA-256 was `0DCFBBC615E482DDD339B14AC2ADA82C5835ACEE9E07AC0CAC5B7EF298A13FC6`; the 1.4.0 run used `95EC53609E5B0DD6694AE9B99399F0649D7C002166754386F366B1E45C50DF99`. Earlier rows retain their original builds in their manifests. Later agent changes require another run; consult the validation record for full build and recovery details.
+The [validation record](../../VALIDATION.md) owns the run table, exact binary/fixture hashes, environment and recovery history. It includes strict and optional-dialog passes, negative controls and the 1.4.0 config-migration run. These results apply to the recorded binaries and 29-mod collection. Later harness changes require another game run; headless checks and agent builds are recorded separately.
 
 ## Check that failure detection works
 

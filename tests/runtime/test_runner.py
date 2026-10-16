@@ -209,6 +209,26 @@ class RunnerTests(unittest.TestCase):
             evidence = runner.collect_evidence(self.output, {"steps": [step]}, 5120, 1440)
             self.assertFalse(evidence[0]["ok"])
 
+    def test_each_passed_step_requires_its_own_primary_screenshot(self):
+        self.output.mkdir()
+        (self.output / "capture.png").write_bytes(png_bytes())
+        first = {"name": "captured", "ok": True, "screenshot": "capture.png"}
+        for second in ({"name": "missing", "ok": True},
+                       {"name": "dialog-only", "ok": True, "dialogScreenshot": "capture.png"}):
+            with self.subTest(second=second["name"]):
+                evidence = runner.collect_evidence(self.output, {"steps": [first, second]}, 2, 1)
+                self.assertTrue(evidence[0]["ok"])
+                self.assertFalse(evidence[1]["ok"])
+                self.assertIn("primary screenshot", evidence[1]["evidenceError"])
+
+    def test_failed_step_without_capture_preserves_the_original_failure(self):
+        self.output.mkdir()
+        evidence = runner.collect_evidence(self.output, {"steps": [
+            {"name": "failed", "ok": False, "error": "original game failure"}]}, 2, 1)
+        self.assertFalse(evidence[0]["ok"])
+        self.assertEqual(evidence[0]["error"], "original game failure")
+        self.assertNotIn("evidenceError", evidence[0])
+
     def test_dialog_capture_has_hash_dimensions_and_gallery_entry(self):
         self.output.mkdir()
         (self.output / "layout.png").write_bytes(png_bytes())

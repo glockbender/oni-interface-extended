@@ -36,13 +36,7 @@ Create a dedicated test colony once and save it as `InterfaceExtended-TestBaseli
 
 ### Optional mod-difference gate
 
-The default scenario loads a matching baseline and reaches the colony without a mod-difference dialog. Do not add a mandatory dialog wait to that path.
-
-For the user's local mod collection, allow an optional gate after selecting the baseline save: wait for either the loaded HUD or the recognized mod-difference dialog. If the HUD appears, continue immediately. If the dialog appears, capture it and record the baseline's mod list, current active mod IDs/versions and their difference. Use the native action that continues with the current collection, then wait for the loaded HUD. Do not synchronize, enable or disable mods, and do not overwrite the immutable baseline to dismiss the warning on future runs.
-
-The agent implements this as `--profile local --allow-mod-difference-dialog`, disabled for the default strict scenario. The local profile permits the known dialog to be absent; it does not require it. Both the dialog branch and a strict load without a dialog have passed in ONI. Unknown dialogs, unexpected actions and mod load failures stop the run with screenshot evidence when rendering works. Loading uses one bounded deadline, with the encountered branch recorded in results. The test agent itself changes the saved mod footprint: an older baseline needs the local gate or a separately prepared matching fixture. A matching fixture was prepared once using native Save As on a disposable copy with the intended collection enabled; the original baseline was preserved. See the [profile setup](../tests/runtime/README.md#profiles-and-saved-mod-lists).
-
-A run with the user's full collection is a separate profile from the isolated regression run. Its manifest must record the actual active collection; it cannot be reported as an Interface-Extended-only pass. The user re-enabled their collection after the recorded isolated check. Future automation must respect that state unless explicitly asked to change it.
+The default profile requires a matching fixture and stops on a mod-difference dialog. The explicit local profile permits the recognized dialog when testing the user's collection; it never synchronizes mods. See [profiles and saved mod lists](../tests/runtime/README.md#profiles-and-saved-mod-lists) for commands, dialog checks and one-time matching-fixture setup. Record the actual active collection, and preserve the user's enabled mods unless explicitly asked to change them. A mixed-mod pass cannot be reported as an isolated compatibility check.
 
 Also test a malformed config and an unwritable config location in a disposable installation. Reading should fall back to defaults; saving should show an error in settings. These paths have not yet been exercised in ONI for 1.3.0.
 
@@ -74,24 +68,7 @@ The settings controls have locale-independent object names such as `InterfaceExt
 
 Unity exposes PNG capture through [`ScreenCapture.CaptureScreenshot`](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/ScreenCapture.CaptureScreenshot.html). The installed game includes `UnityEngine.ScreenCaptureModule.dll`. Capture after [`WaitForEndOfFrame`](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/WaitForEndOfFrame.html), which follows camera and GUI rendering. Wait for a complete, decodable PNG before marking a capture successful. Use a rendered desktop session for UI tests; do not assume `-batchmode -nographics` can validate HUD rendering.
 
-Each real invocation writes a new local run directory. The [runner reference](../tests/runtime/README.md#assertions-and-screenshots) lists exact output files and evidence fields. Its core output is:
-
-```text
-artifacts/runs/<run-id>/
-  manifest.json       # Build/DLL hash, save hash, environment, scenario version
-  results.json        # Steps, actions, assertions, timestamps, pass/fail
-  full-width.png
-  hud-full-width.png
-  preset-2560.png
-  hud-2560.png
-  numeric-width.png
-  failure-<step>.png  # Capture on failure, when rendering still works
-  layout-<step>.json  # Measured rectangles, raycast target, pause state
-  player-log.txt      # Relevant log interval
-  index.html         # Local gallery linked to step results and measurements
-```
-
-The tree shows the artifact layout; actual run results are recorded separately in [validation](../VALIDATION.md). The agent decodes each capture; the runner validates PNG structure/checksums/compressed data and stores dimensions and SHA-256 hashes in `evidence.json`. Settings, unobstructed HUD, optional mod-difference, close/restore and failure captures support human visual review alongside numerical assertions. No automatic visual baseline comparison is implemented.
+Each invocation writes a separate local run directory. The [runner reference](../tests/runtime/README.md#assertions-and-screenshots) owns the output file definitions, image-validation requirements and gallery format. Every successful step requires a validated primary PNG. Settings, unobstructed HUD, optional-dialog and failure captures support human review alongside numerical assertions; automatic visual baseline comparison is not implemented. Exact completed runs belong in [validation](../VALIDATION.md).
 
 The baseline should be a small, unbuilt cycle-1 colony, paused with a fixed camera and no modal or selected object. Keep an immutable original plus a working copy; test actions and autosaves may change the latter. Reset mod config separately because ONI saves do not contain this mod's settings. Use a separate baseline per game/DLC profile and revalidate it after an ONI update rather than silently replacing it. Save files remain local and are ignored by Git.
 

@@ -1,18 +1,31 @@
 """Check README export and synchronization without Steam or the game."""
 
 import contextlib
+import hashlib
 import importlib.util
 import io
 import json
 from pathlib import Path
+import struct
 import tempfile
 import unittest
 from unittest import mock
+import zlib
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("workshop", ROOT / "scripts" / "workshop.py")
 workshop = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(workshop)
+
+
+def fixture_png(width=512, height=512):
+    """Generate complete synthetic PNG bytes for file-contract tests, never game evidence."""
+    def chunk(kind, payload):
+        return (struct.pack(">I", len(payload)) + kind + payload
+                + struct.pack(">I", zlib.crc32(kind + payload) & 0xFFFFFFFF))
+    return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+            + chunk(b"IDAT", zlib.compress((b"\x00" + b"\x12\x34\x56" * width) * height))
+            + chunk(b"IEND", b""))
 
 
 class WorkshopTests(unittest.TestCase):
@@ -21,8 +34,10 @@ class WorkshopTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
         (self.root / "capture.jpg").write_bytes(b"synthetic image bytes for exporter tests only")
+        (self.root / "icon.png").write_bytes(fixture_png())
         (self.root / "details.md").write_text("Details", encoding="utf-8")
-        self.readme = "\n\n".join(
+        self.cover = '<img src="icon.png" width="96" height="96" alt="Test cover">'
+        self.readme = "# Fixture\n\n" + self.cover + "\n\n" + "\n\n".join(
             f"<!-- workshop:{name}:start -->\n"
             + ("![Real capture](capture.jpg)" if name == "screenshots" else "## " + name + "\n\nProduct text.")
             + f"\n<!-- workshop:{name}:end -->" for name in workshop.SECTIONS)
@@ -70,6 +85,46 @@ class WorkshopTests(unittest.TestCase):
         with self.assertRaises(workshop.ExportError):
             workshop.convert("![One](capture.jpg)\n![Two](capture.jpg)", self.root, [])
 
+    def test_cover_is_a_separate_preview_and_never_a_gallery_image(self):
+        generated = workshop.export(self.root)
+        manifest = json.loads(generated["screenshots.json"])
+        self.assertEqual(manifest["preview"], {
+            "source": "icon.png", "url": workshop.RAW + "/icon.png",
+            "sha256": hashlib.sha256((self.root / "icon.png").read_bytes()).hexdigest(),
+            "width": 512, "height": 512})
+        self.assertEqual([image["source"] for image in manifest["images"]], ["capture.jpg"])
+        self.assertNotIn("icon.png", generated["description.bbcode"])
+
+    def test_missing_or_multiple_html_covers_are_rejected(self):
+        for source in (self.readme.replace(self.cover, ""), self.readme + "\n" + self.cover):
+            (self.root / "README.md").write_text(source, encoding="utf-8")
+            with self.subTest(source=source[:80]), self.assertRaisesRegex(workshop.ExportError, "one cover"):
+                workshop.export(self.root)
+
+    def test_cover_requires_existing_512_square_png(self):
+        for data in (fixture_png(511, 512), fixture_png(512, 256), b"not a PNG"):
+            (self.root / "icon.png").write_bytes(data)
+            with self.subTest(data_length=len(data)), self.assertRaisesRegex(workshop.ExportError, "512 x 512 PNG"):
+                workshop.export(self.root)
+        (self.root / "icon.png").unlink()
+        with self.assertRaisesRegex(workshop.ExportError, "repository file"):
+            workshop.export(self.root)
+
+    def test_changed_cover_invalidates_generated_manifest_without_rewriting(self):
+        with mock.patch.object(workshop, "ROOT", self.root), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(workshop.main([]), 0)
+        manifest_path = self.root / "artifacts" / "workshop" / "screenshots.json"
+        previous = manifest_path.read_bytes()
+        # Ancillary metadata changes file identity while preserving a complete valid PNG.
+        data = (self.root / "icon.png").read_bytes()
+        payload = b"Fixture\x00Changed cover"
+        chunk = struct.pack(">I", len(payload)) + b"tEXt" + payload
+        chunk += struct.pack(">I", zlib.crc32(b"tEXt" + payload) & 0xFFFFFFFF)
+        (self.root / "icon.png").write_bytes(data[:-12] + chunk + data[-12:])
+        with mock.patch.object(workshop, "ROOT", self.root), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(workshop.main(["--check"]), 1)
+        self.assertEqual(manifest_path.read_bytes(), previous)
+
     def test_check_without_output_is_read_only(self):
         with mock.patch.object(workshop, "ROOT", self.root), contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(workshop.main(["--check"]), 0)
@@ -97,17 +152,31 @@ class WorkshopTests(unittest.TestCase):
         self.assertEqual(first, second)
         description = first["description.bbcode"]
         manifest = json.loads(first["screenshots.json"])
+        self.assertEqual(manifest["preview"]["source"], "docs/images/icon.png")
+        self.assertEqual((manifest["preview"]["width"], manifest["preview"]["height"]), (512, 512))
+        cover_hash = hashlib.sha256((ROOT / "docs/images/icon.png").read_bytes()).hexdigest()
+        self.assertEqual(manifest["preview"]["sha256"], cover_hash)
+        self.assertNotIn(manifest["preview"]["source"], [item["source"] for item in manifest["images"]])
+        self.assertNotIn("icon.png", description)
         self.assertNotIn("make build", description)
         self.assertNotIn("Roslyn", description)
+        self.assertNotIn("20-step", description)
+        self.assertNotIn("test agent", description.lower())
+        self.assertNotIn("SHA-256", description)
+        self.assertNotIn("config-recovery", description)
+        self.assertNotIn("1.3.0", description)
+        self.assertNotIn("Capture metadata", description)
+        self.assertNotIn("settings-ru", description)
+        self.assertEqual(description.count("Russian"), 1)
         self.assertNotIn("artifacts/", description)
         self.assertNotIn("file://", description)
         self.assertNotIn("C:\\", description)
         self.assertNotIn("](docs/", description)
         self.assertIn("[url=" + workshop.REPOSITORY + "/issues]", description)
-        self.assertEqual([item["order"] for item in manifest["images"]], [1, 2, 3, 4])
+        self.assertEqual([item["order"] for item in manifest["images"]], [1, 2, 3])
         self.assertEqual([item["source"] for item in manifest["images"]], [
             "docs/images/hud-full-width.jpg", "docs/images/hud-2560.jpg",
-            "docs/images/settings-en.jpg", "docs/images/settings-ru.jpg"])
+            "docs/images/settings-en.jpg"])
         for item in manifest["images"]:
             self.assertTrue((ROOT / item["source"]).is_file())
             self.assertTrue(item["url"].startswith(workshop.RAW + "/"))

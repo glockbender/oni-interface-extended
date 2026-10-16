@@ -45,7 +45,7 @@ replaceable installation folder; packaging must not reset them.
 ## Workflow and evidence
 
 Use the Make targets or equivalent PowerShell tasks documented in
-[README](README.md#build). Make is optional. `check` runs game-independent checks;
+[development guide](docs/development.md#build). Make is optional. `check` runs game-independent checks;
 `build` checks the installed game contract; `package` validates release contents.
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for review expectations and
 [testing](docs/testing.md) for game verification.

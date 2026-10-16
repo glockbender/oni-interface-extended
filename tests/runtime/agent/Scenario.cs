@@ -651,7 +651,10 @@ namespace InterfaceExtended.TestAgent
         private void Log(string message, string trace, LogType type)
         {
             logs.Add(Files.Utc() + " [" + type + "] " + message + (string.IsNullOrEmpty(trace) ? "" : "\n" + trace));
-            if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors.Add(message);
+            bool layoutFailure = type == LogType.Warning && message != null &&
+                message.StartsWith("[CenteredHud] Restoring original HUD after layout error:", StringComparison.Ordinal);
+            if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert || layoutFailure)
+                errors.Add(message);
         }
         private static FieldInfo Field(Type type, string name)
         {

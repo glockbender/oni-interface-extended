@@ -166,7 +166,7 @@ def collect_evidence(output, results, width, height):
     steps = results.get("steps")
     if not isinstance(steps, list) or not steps:
         raise RunError("Results must contain at least one step")
-    evidence, screenshots = [], 0
+    evidence = []
     for step in steps:
         if not isinstance(step, dict) or not isinstance(step.get("name"), str) or type(step.get("ok")) is not bool:
             raise RunError("Invalid step record")
@@ -185,7 +185,6 @@ def collect_evidence(output, results, width, height):
                 seen.add(canonical_name)
             try:
                 record[image_field] = inspect_png(screenshot_path(output, name))
-                screenshots += 1
                 if (record[image_field]["width"], record[image_field]["height"]) != (width, height):
                     raise RunError(f"Screenshot dimensions differ from expected {width} x {height}")
             except (OSError, RunError) as error:
@@ -194,10 +193,10 @@ def collect_evidence(output, results, width, height):
                 previous_error = record.get("evidenceError")
                 record["evidenceError"] = previous_error + "; " + message if previous_error else message
                 record.pop(image_field, None)
+        if record["ok"] and "image" not in record:
+            record["ok"] = False
+            record["evidenceError"] = "Passed step is missing its primary screenshot evidence"
         evidence.append(record)
-    if not screenshots:
-        evidence[0]["ok"] = False
-        evidence[0]["evidenceError"] = evidence[0].get("evidenceError", "No complete screenshot evidence was supplied")
     return evidence
 
 

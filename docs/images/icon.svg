@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Interface Extended</title>
+  <desc>HUD panels move inward within an unchanged wide screen.</desc>
+  <path fill="#29292d" d="M0 0h512v512H0z"/>
+  <rect x="48" y="184" width="416" height="144" rx="4" fill="none" stroke="#f4e9d8" stroke-width="8"/>
+  <path fill="#f4e9d8" d="M160 204h40v20h-40z M160 288h28v20h-28z M312 204h40v20h-40z M324 288h28v20h-28z"/>
+  <path d="M80 256h48l-14-14m14 14-14 14 M432 256h-48l14-14m-14 14 14 14"
+    fill="none" stroke="#c7798f" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

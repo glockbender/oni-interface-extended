@@ -2,6 +2,13 @@
 
 Date: 2026-10-16 (Asia/Nicosia).
 
+## Publication preparation review
+
+- Game-independent checks passed: production geometry/options/config I/O, localization (15 English and Russian entries), 31 runner tests and 13 Workshop exporter tests. Python protocol tests use synthetic fixtures; they do not exercise ONI rendering.
+- The test agent now rejects the production HUD's layout-restoration warning; the runner requires its own validated primary PNG for every successful step. The agent rebuilt with warnings as errors and passed the installed-game contract. This later agent build has not been installed or rerun in ONI. Runtime results below identify the earlier binaries actually tested.
+- CI uses the shared check task so a failed command cannot be hidden by a later successful one. README/Workshop text, the cover and three-image gallery were reviewed together. The icon was inspected at 512 and 64 pixels; the Steam-rendered item remains unverified.
+- No production runtime code or release binary changed during this review. [Review notes](docs/review.md) record findings and remaining limits.
+
 ## Unreleased 1.4.0: identity and config storage
 
 - Public static ID is `InterfaceExtended`; ONI's loader reported the new ID and zero broken installations. The local folder/DLL and C# namespaces remain `CenteredHud`; no duplicate installation was created.
@@ -11,7 +18,7 @@ Date: 2026-10-16 (Asia/Nicosia).
 - Agent DLL SHA-256: `95EC53609E5B0DD6694AE9B99399F0649D7C002166754386F366B1E45C50DF99`. Its native Options selector uses the new ID. Russian settings were visually inspected in the main-menu capture; translations still load from the installation directory, independently of config storage. The scenario verified writes at the new shared config path and restored its original bytes afterward.
 - An earlier attempt (`20261016T000012Z-f121ac4b`) stopped at `preset-2560` because a Windows reader briefly denied replacement of the test bridge's status JSON. Cleanup restored config successfully. The agent now retries only sharing/lock violations up to five times at 10 ms intervals; the complete pass above used that build. This was a test-protocol failure, not a production config failure.
 - Filesystem regression checks use production config/options code and PowerShell's bundled Json.NET without ONI. They cover fresh defaults, missing parent creation, install/local migration precedence, exact bytes/BOM/unknown-key preservation, existing or malformed shared config precedence, invalid/null legacy JSON, failed migration with usable legacy settings, locked-file replacement failure and preservation across an installation update. These do not exercise ONI's save-error UI.
-- Workshop description and ordered image manifest are generated from README. Nine standard-library tests and source/staleness validation passed; these checks do not upload to Steam or validate the rendered Workshop page.
+- Workshop description and ordered image manifest are generated from README. At this storage-validation checkpoint, nine standard-library tests and source/staleness validation passed; later checks are recorded above. These checks do not upload to Steam or validate the rendered Workshop page.
 - The package task passed all checks and produced `InterfaceExtended-1.4.0.zip`. Its six entries contain only the production DLL, two metadata files, MIT license and two translation files. No default config, game assemblies or test agent is shipped. The packaged DLL hash matches the installed runtime-tested binary.
 - After testing, ONI was closed and only the development agent was disabled. The original 28 enabled mods match after mapping the requested ID change; the original fixture and both config files remain unchanged. Local migration/cleanup evidence and logs are under `artifacts/config-1.4.0`.
 
@@ -53,7 +60,7 @@ Windows, ONI U59-744825-SCRPAN / Unity 6000.3.5f2, 5120 × 1440, UI scale 110%. 
 
 ## Development test harness: game runs
 
-The separate test mod and standard-library Python runner are under [tests/runtime](tests/runtime/README.md). The agent compiles with warnings as errors against U59-744825. `make check` passes geometry/options/localization checks and 29 Python protocol/evidence tests. Those Python tests use synthetic saves, bridge responses and PNGs; actual game runs are listed below.
+The separate test mod and standard-library Python runner are under [tests/runtime](tests/runtime/README.md). At this runtime checkpoint, the agent compiled with warnings as errors against U59-744825 and 29 Python protocol/evidence tests passed alongside geometry/options/localization checks. Those Python tests used synthetic saves, bridge responses and PNGs; actual game runs are listed below. Later harness changes and check counts are recorded above.
 
 After the user handed over control, the agent was installed as a separate development mod. The user's 28 enabled mods were retained; adding the agent made 29. Runs used Windows, U59-744825-SCRPAN / Unity 6000.3.5f2, Russian, 5120 × 1440, UI scale 110% (canvas scale 1.22100008), with all five installed DLC. This is coverage of the recorded scenario with that collection, not individual compatibility certification or an isolated run.
 

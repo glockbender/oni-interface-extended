@@ -6,7 +6,7 @@ Keep pull requests focused on one behavior or documentation correction. Explain 
 
 Use four spaces in C# and PowerShell, two in YAML/JSON, UTF-8 and LF line endings. Follow the surrounding C# style and keep comments for game-specific assumptions or non-obvious decisions. Avoid wrappers, dependencies and generic helpers without a concrete use.
 
-Run the checks in [README](README.md#build). Changes to Harmony targets or prefab paths also need a build against ONI and the relevant in-game regression steps in [testing](docs/testing.md). Keep validation records specific to the exact version tested.
+Run the checks in the [development guide](docs/development.md). Changes to Harmony targets or prefab paths also need a build against ONI and the relevant in-game regression steps in [testing](docs/testing.md). Keep validation records specific to the exact version tested.
 
 For UI changes, reuse ONI's visual controls and provide screenshots from the game. Do not substitute mockups for runtime evidence. For text changes, update the [translation template and catalogs](docs/translating.md).
 
