@@ -2,11 +2,17 @@
 
 Date: 2026-10-16 (Asia/Nicosia).
 
+## Private Workshop draft
+
+- Created [item 3820540318](https://steamcommunity.com/sharedfiles/filedetails/?id=3820540318) using the installed uploader's Steam SDK and existing Steam session. The creation request explicitly used Private (`2`). The SDK returned success; a separate details query confirmed visibility `2`, creator app `636750`, consumer app `457140`, matching title/description and expected tags. No public visibility was requested. The callback did not require accepting the Workshop agreement again.
+- Uploaded the 15,964-byte six-file 1.4.0 ZIP, containing the production DLL tested below, and the approved IE+ preview. Cloud readback matched the submitted bytes; item details reported the expected package and preview sizes. Description bytes came directly from the README export with line breaks preserved. The local receipt is `artifacts/private-upload-receipt.json`; the one-off SDK helper is not part of source or player packages.
+- Page rendering, the three-image gallery, disabled comments and a subscribed installation remain unverified. Desktop automation stopped on the user's physical Escape key while opening the private page. This interruption did not change item visibility or the active mod collection. No subscribed-download game pass is claimed.
+
 ## Publication preparation review
 
 - Game-independent checks passed: production geometry/options/config I/O, localization (15 English and Russian entries), 31 runner tests and 13 Workshop exporter tests. Python protocol tests use synthetic fixtures; they do not exercise ONI rendering.
 - The test agent now rejects the production HUD's layout-restoration warning; the runner requires its own validated primary PNG for every successful step. The agent rebuilt with warnings as errors and passed the installed-game contract. This later agent build has not been installed or rerun in ONI. Runtime results below identify the earlier binaries actually tested.
-- CI uses the shared check task so a failed command cannot be hidden by a later successful one. README/Workshop text, the cover and three-image gallery were reviewed together. The icon was inspected at 512 and 64 pixels; the Steam-rendered item remains unverified.
+- CI uses the shared check task so a failed command cannot be hidden by a later successful one. README/Workshop text, the cover and three-image gallery were reviewed together. The approved IE+ icon was inspected at 512 and 64 pixels; the Steam-rendered item remains unverified.
 - No production runtime code or release binary changed during this review. [Review notes](docs/review.md) record findings and remaining limits.
 
 ## Unreleased 1.4.0: identity and config storage

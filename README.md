@@ -18,7 +18,7 @@ Choose a 2560 px or 3360 px HUD, enter a custom width, or restore the full scree
 - Optional keyboard shortcuts remain unverified. Every setting is available by mouse.
 <!-- workshop:compatibility:end -->
 
-There is no Steam Workshop listing or public binary release yet. See [build instructions](docs/development.md#build) to prepare a local copy.
+There is no public Steam Workshop or binary release yet. See [build instructions](docs/development.md#build) to prepare a local copy.
 
 <!-- workshop:screenshots:start -->
 ## Screenshots
