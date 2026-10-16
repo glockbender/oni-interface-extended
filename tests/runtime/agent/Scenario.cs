@@ -433,7 +433,7 @@ namespace InterfaceExtended.TestAgent
 
         private IEnumerator OpenSettings()
         {
-            KButton entry = UiDriver.MenuButton(options, b => Equals(b.userData, "prvz.CenteredHud.Options"));
+            KButton entry = UiDriver.MenuButton(options, b => Equals(b.userData, "InterfaceExtended.Options"));
             step["openInteraction"] = UiDriver.Click(entry);
             yield return Wait(() => ActiveSettings().Length == 1 && ActiveSettings()[0].IsActive(),
                 5, "Expected exactly one ready Interface Extended window");

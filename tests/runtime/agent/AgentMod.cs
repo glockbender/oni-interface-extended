@@ -57,8 +57,21 @@ namespace InterfaceExtended.TestAgent
         {
             string temporary = path + ".tmp";
             File.WriteAllText(temporary, JsonConvert.SerializeObject(value, Formatting.Indented));
-            if (File.Exists(path)) File.Replace(temporary, path, null);
-            else File.Move(temporary, path);
+            for (int attempt = 0; ; attempt++)
+            {
+                try
+                {
+                    if (File.Exists(path)) File.Replace(temporary, path, null);
+                    else File.Move(temporary, path);
+                    break;
+                }
+                catch (IOException error) when (attempt < 5 &&
+                    ((error.HResult & 0xffff) == 32 || (error.HResult & 0xffff) == 33))
+                {
+                    // Windows readers can briefly deny replacement while polling the bridge.
+                    System.Threading.Thread.Sleep(10);
+                }
+            }
         }
 
         internal static void Require(bool condition, string message)

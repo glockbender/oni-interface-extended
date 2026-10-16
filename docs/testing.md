@@ -8,11 +8,15 @@ Run `make check`, or `./tasks.ps1 check` without Make. Requires PowerShell 7, Py
 | --- | --- | --- |
 | `tests/test-geometry.ps1` | Presets, invalid inputs, scaled minimum, step regression, symmetry, center, stretched anchors and restoration mapping | Actual Unity layout, click targets or rendering |
 | `tests/test-options.ps1` | First-install defaults, width bounds, missing shortcut keys and preservation of custom settings | JSON file writes, disk errors or game input |
+| `tests/test-config.ps1` | Actual config I/O: migration bytes/precedence, invalid data, write failure, atomic replacement and preservation across installation updates | ONI startup, native save-error UI or other operating systems |
+| `scripts/workshop.py --check`, `tests/test_workshop.py` | README section selection, BBCode conversion, image references and stale export detection | Steam upload, owner controls or gallery rendering |
 | `scripts/localization.py` | English/template/catalog consistency, duplicates, stale text, fuzzy/plural entries and placeholders | Native startup order, font coverage or text clipping |
 | `tests/runtime/test_runner.py` | Request correlation, timeouts, baseline preservation, safe HTML paths, PNG validation and failed-evidence handling | Actual Unity events, rendering or any colony scenario |
 | `tests/test-game-contract.ps1 -GamePath <path>` | Named Harmony targets and reflected fields in installed DLL metadata; mod version and framework references | Harmony runtime injection or prefab hierarchy |
 
 `make build` compiles against your installed ONI with warnings as errors and then runs the game contract check. `make package` does the same and creates `artifacts/InterfaceExtended-<version>.zip`. `make install` also copies to your local mods directory and requires ONI to be closed. `make translations` regenerates the translation template and validates catalogs. `make test-agent` builds the separate development agent without installing it; `make test-runner` runs its headless checks alone. Set `ONI_GAME_PATH` for the game-dependent commands. All tasks are also available as `./tasks.ps1 -Task <name>`; `-GamePath` and `-Python` accept explicit paths.
+
+`make workshop` generates description text and a screenshot-upload manifest from README. This prepares local files only; it does not publish. See [Workshop preparation](workshop.md). The config suite runs in its own PowerShell process to compile production config/options code against the host's bundled Json.NET without ONI or duplicate type definitions from the options suite.
 
 GitHub Actions runs the game-independent checks. It does not have ONI installed, build the mod, or run a colony. No game assemblies are published for CI. See [VALIDATION.md](../VALIDATION.md) for completed runtime checks.
 
@@ -56,7 +60,7 @@ Also test a malformed config and an unwritable config location in a disposable i
 
 Routine HUD tests load a disposable copy of a dedicated baseline through the native load path. Automated world generation, DLC selection and starting-duplicant selection are outside this implementation; creating a new world is a separate check when relevant.
 
-The settings controls now have locale-independent object names such as `InterfaceExtendedSettings/Panel/Layout/Preset2560`, `FullWidth`, `Width`, `Guides`, `DecreaseWidth` and `Panel/Done`. The native options entry already has the unique user-data ID `prvz.CenteredHud.Options`. A driver can find these without matching visible translated text.
+The settings controls have locale-independent object names such as `InterfaceExtendedSettings/Panel/Layout/Preset2560`, `FullWidth`, `Width`, `Guides`, `DecreaseWidth` and `Panel/Done`. In 1.4.0 the native options entry uses the unique user-data ID `InterfaceExtended.Options` (previously `prvz.CenteredHud.Options`). A driver can find these without matching visible translated text.
 
 ### Implemented prototype and remaining coverage
 

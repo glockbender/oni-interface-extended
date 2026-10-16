@@ -2,6 +2,21 @@
 
 Date: 2026-10-16 (Asia/Nicosia).
 
+## Unreleased 1.4.0: identity and config storage
+
+- Public static ID is `InterfaceExtended`; ONI's loader reported the new ID and zero broken installations. The local folder/DLL and C# namespaces remain `CenteredHud`; no duplicate installation was created.
+- Built against U59-744825 with warnings as errors and the game contract check, including `KMod.Manager.GetDirectory`. Production DLL SHA-256: `7DBE7CF1693824462359C4FE077C07B87AA745172DA31B1FDAA1843E6E21A91D`.
+- On the first normal Steam launch, the existing installation-folder config migrated into ONI's `mods/config/InterfaceExtended/config.json`. Source and destination both retained exact SHA-256 `D6AABDA2AA85190A7258AAC8FC1539E1C0FCC492C724C9A553CF176B5786F257`. The legacy file was left untouched. A second normal launch read the shared config successfully.
+- The fixed HUD scenario passed all 20 steps with 20 independently validated PNGs in local run `artifacts/runs/20261016T000221Z-049c56a6`. Windows, U59-744825-SCRPAN, Russian, 5120 × 1440, 110% UI scale, all five installed DLC and 29 active mods including the development agent. The local profile allowed the known mod-difference gate, but no dialog appeared in this run. This is not a base-game-only or isolated compatibility pass.
+- Agent DLL SHA-256: `95EC53609E5B0DD6694AE9B99399F0649D7C002166754386F366B1E45C50DF99`. Its native Options selector uses the new ID. Russian settings were visually inspected in the main-menu capture; translations still load from the installation directory, independently of config storage. The scenario verified writes at the new shared config path and restored its original bytes afterward.
+- An earlier attempt (`20261016T000012Z-f121ac4b`) stopped at `preset-2560` because a Windows reader briefly denied replacement of the test bridge's status JSON. Cleanup restored config successfully. The agent now retries only sharing/lock violations up to five times at 10 ms intervals; the complete pass above used that build. This was a test-protocol failure, not a production config failure.
+- Filesystem regression checks use production config/options code and PowerShell's bundled Json.NET without ONI. They cover fresh defaults, missing parent creation, install/local migration precedence, exact bytes/BOM/unknown-key preservation, existing or malformed shared config precedence, invalid/null legacy JSON, failed migration with usable legacy settings, locked-file replacement failure and preservation across an installation update. These do not exercise ONI's save-error UI.
+- Workshop description and ordered image manifest are generated from README. Nine standard-library tests and source/staleness validation passed; these checks do not upload to Steam or validate the rendered Workshop page.
+- The package task passed all checks and produced `InterfaceExtended-1.4.0.zip`. Its six entries contain only the production DLL, two metadata files, MIT license and two translation files. No default config, game assemblies or test agent is shipped. The packaged DLL hash matches the installed runtime-tested binary.
+- After testing, ONI was closed and only the development agent was disabled. The original 28 enabled mods match after mapping the requested ID change; the original fixture and both config files remain unchanged. Local migration/cleanup evidence and logs are under `artifacts/config-1.4.0`.
+
+The first Steam Workshop delivery/update, base-game-only runtime, other operating systems, physical shortcuts and in-game config error UI remain untested. Earlier screenshots and runtime results below retain their original version labels.
+
 ## Unreleased 1.3.0: source and build checks
 
 - Built against ONI U59-744825 with Roslyn 4.14.0, warnings treated as errors.

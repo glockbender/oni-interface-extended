@@ -43,7 +43,6 @@ Set-Content -LiteralPath $response -Value $arguments -Encoding utf8
 & $dotnet $compiler /noconfig ('@' + $response)
 if ($LASTEXITCODE -ne 0) { throw "C# compilation failed ($LASTEXITCODE)." }
 Copy-Item -LiteralPath (Join-Path $projectRoot 'mod\mod.yaml'),(Join-Path $projectRoot 'mod\mod_info.yaml'),(Join-Path $projectRoot 'LICENSE') -Destination $output
-Copy-Item -LiteralPath (Join-Path $projectRoot 'mod\config.json') -Destination $output -Force
 Copy-Item -LiteralPath (Join-Path $projectRoot 'mod\translations') -Destination $output -Recurse -Force
 & (Join-Path $projectRoot 'tests/test-game-contract.ps1') -GamePath $GamePath
 Write-Output "Built: $output"
@@ -53,6 +52,5 @@ if ($Install) {
     New-Item -ItemType Directory -Path $destination -Force | Out-Null
     foreach ($file in @('CenteredHud.dll','mod.yaml','mod_info.yaml')) { Copy-Item -LiteralPath (Join-Path $output $file) -Destination $destination -Force }
     Copy-Item -LiteralPath (Join-Path $output 'translations') -Destination $destination -Recurse -Force
-    if (!(Test-Path -LiteralPath (Join-Path $destination 'config.json'))) { Copy-Item -LiteralPath (Join-Path $output 'config.json') -Destination $destination }
     Write-Output "Installed: $destination"
 }

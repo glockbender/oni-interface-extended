@@ -7,7 +7,7 @@ namespace CenteredHud
     [HarmonyPatch(typeof(OptionsMenuScreen), "OnPrefabInit")]
     internal static class NativeOptionsIntegration
     {
-        private const string EntryId = "prvz.CenteredHud.Options";
+        private const string EntryId = "InterfaceExtended.Options";
 
         private static void Postfix(OptionsMenuScreen __instance,
             ref IList<KButtonMenu.ButtonInfo> ___buttons, GameObject ___panelRoot)

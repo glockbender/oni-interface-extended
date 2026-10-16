@@ -45,6 +45,7 @@ Read-Metadata (Join-Path $GamePath 'OxygenNotIncluded_Data/Managed/Assembly-CSha
     Require-Members $reader 'KButtonMenu' @() @('buttons')
     Require-Members $reader 'KModalButtonMenu' @() @('panelRoot')
     Require-Members $reader 'Localization' @('Initialize', 'RegisterForTranslation', 'GetLocale', 'LoadStringsFile', 'OverloadStrings') @()
+    Require-Members $reader 'Manager' @('GetDirectory') @()
 }
 
 Read-Metadata $ModPath {

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.0 (unreleased)
+
+- Use `InterfaceExtended` as the public mod ID; replace the earlier local copy when updating.
+- Store settings in ONI's `mods/config/InterfaceExtended/config.json` so installation updates cannot replace them. Import a legacy config only if the shared file is absent; preserve its source and report migration write failures.
+- Load bundled translations from the installation directory independently of config storage.
+- Stop shipping a default config; defaults come from the options class.
+- Generate Workshop text and the screenshot upload list from README, with checks for unsupported syntax and stale output.
+- Add repository working instructions and filesystem regression checks for migration and update persistence.
+- Retry transient Windows sharing/lock errors when the test agent publishes bridge JSON.
+
 ## 1.3.0 (unreleased)
 
 - Use English as the source language for all mod UI text.

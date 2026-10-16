@@ -99,6 +99,7 @@ On 2026-10-16, at 5120 × 1440 / 110% UI scale:
 
 | Local run directory | Result |
 | --- | --- |
+| `20261016T000221Z-049c56a6` | Production 1.4.0, local profile: 20 steps / 20 validated PNGs, no mod-difference dialog encountered. Writes used the shared config path; original bytes were restored. |
 | `20261015T233020Z-48008de9` | Local profile passed: 20 steps, 21 validated PNGs including the recognized mod-difference dialog. |
 | `20261015T233250Z-083e6ed5` | Strict/default profile passed: 20 steps, 20 validated PNGs, no mod-difference dialog. |
 | `20261015T233421Z-4cc97db4` | Wrong-width negative control returned exit 1 at `preset-2560`: measured left anchor `0.25`, deliberately expected `0.2421875`. Original config bytes were restored. |
@@ -106,7 +107,7 @@ On 2026-10-16, at 5120 × 1440 / 110% UI scale:
 | `20261015T234212Z-e59aaa8e` | Final agent build, blocked-control negative returned exit 1 at `preset-2560`: `Preset2560` was blocked by `InterfaceExtendedTestBlocker`. Failure PNG and exact config restoration were recorded. |
 | `20261015T234304Z-ffafc8b1` | Final agent build, wrong-width negative returned exit 1 at `preset-2560`, with the same intended anchor mismatch, failure PNG and exact config restoration. |
 
-These runs used 29 active mods including the development agent. They verify the listed HUD scenario for that collection, not an isolated compatibility test or general gameplay. The final agent DLL SHA-256 is `0DCFBBC615E482DDD339B14AC2ADA82C5835ACEE9E07AC0CAC5B7EF298A13FC6`; earlier rows retain their original builds in their manifests. Later agent changes require another run; consult the validation record for full build and recovery details.
+These runs used 29 active mods including the development agent. They verify the listed HUD scenario for that collection, not an isolated compatibility test or general gameplay. The 1.3.0 agent's final DLL SHA-256 was `0DCFBBC615E482DDD339B14AC2ADA82C5835ACEE9E07AC0CAC5B7EF298A13FC6`; the 1.4.0 run used `95EC53609E5B0DD6694AE9B99399F0649D7C002166754386F366B1E45C50DF99`. Earlier rows retain their original builds in their manifests. Later agent changes require another run; consult the validation record for full build and recovery details.
 
 ## Check that failure detection works
 
@@ -122,6 +123,8 @@ The first deliberately expects 80 extra pixels at the 2560 step; the second adds
 ## Failure and recovery
 
 Exit codes: `0` passed (or dry-run prepared), `1` scenario/evidence failed, `2` setup/protocol error, `3` timeout. The default external timeout is 180 seconds; `--timeout` changes it. Loading has its own 90-second deadline. Requests/responses use matching UUIDs and atomic JSON publication. A terminal response is written after cleanup and evidence. Completed bridge exchanges are archived under `bridge/history`; an unfinished request is not overwritten.
+
+On Windows, a polling reader can briefly deny replacement of a bridge JSON file. The agent retries only sharing/lock violations up to five times at 10 ms intervals. Other I/O errors fail immediately; a persistent lock still fails the run. This bounded bridge retry does not replace UI readiness checks.
 
 If the runner times out, inspect ONI, the run directory and `bridge/status.json`. Timeout does not stop an in-progress game coroutine. Do not immediately submit another run or delete the outstanding request. The agent claims each request durably under `bridge/claims/<id>` before executing it; restarting ONI does not replay an unfinished request or overwrite its recovery backup. Once the game has stopped or the old run has finished, inspect the response and recovery record before manually recovering a stale bridge or lock. Preserve the claim and old run artifacts; submit a new request ID only after recovery.
 
